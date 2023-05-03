@@ -1,5 +1,7 @@
 package math;
 
+import java.awt.*;
+
 public class Vector3D {
     private double x, y, z;
 
@@ -37,6 +39,10 @@ public class Vector3D {
 
     public void setZ(double z) {
         this.z = z;
+    }
+
+    public Vector3D negate() {
+        return new Vector3D(-this.x, -this.y, -this.z);
     }
 
     public Vector3D add(Vector3D vec) {
@@ -99,6 +105,12 @@ public class Vector3D {
                 ", y=" + y +
                 ", z=" + z +
                 '}';
+    }
+
+    public int toRGB(){
+        /*Color color = new Color((int) x, (int) y, (int) z);
+        return color.getRGB();*/
+        return (0xFF << 24) | ((int) this.getX() << 16) | ((int) this.getY() << 8) | (int) this.getZ();
     }
     public double[] toArray() {
         return new double[]{x, y, z};

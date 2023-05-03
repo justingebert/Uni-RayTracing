@@ -21,6 +21,10 @@ public abstract class Object3D {
         return color.getRGB();
     }
 
+    public Vector3D getColVec() {
+        return new Vector3D(color.getRed(), color.getGreen(), color.getBlue());
+    }
+
     //TODO change to implement ray class
     public abstract double calculateIntersection(Vector3D origin, Vector3D direction);
 

@@ -63,7 +63,7 @@ public class Sphere extends Object3D {
         //vektor von rayOrigin zu Schnittpunkt
         Vector3D p =  ray.getOrigin().add(ray.getDirection().scale(t));
 
-        Abstand
+        //Abstand
         double y = position.subtract(p).length();
         if (y < radius) {
             double x = (float) Math.sqrt(radius*radius - y*y);
@@ -74,6 +74,22 @@ public class Sphere extends Object3D {
             return null;
         }
     }
+
+   /* @Override
+    public Vector3D calculateIntersection(Ray ray) {
+        //scalar von rayOrigin zu Kugelmitte
+        Vector3D oc = ray.getOrigin().subtract(position);
+        double a = Vector3D.dot(ray.getDirection(), ray.getDirection());
+        double b = 2.0 * Vector3D.dot(oc, ray.getDirection());
+        double c = Vector3D.dot(oc, oc) - radius * radius;
+
+        double discriminant = b * b - 4 * a * c;
+        if(discriminant < 0) return null;
+        double wurzel = Math.sqrt(discriminant);
+
+    }*/
+
+
 
     @Override
     public Vector3D getNormalAt(Vector3D point) {

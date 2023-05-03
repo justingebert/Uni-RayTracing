@@ -1,17 +1,19 @@
+import math.Ray;
 import math.Vector3D;
 
 public class Camera {
 
 
 
-    private Vector3D position;
-    private Vector3D direction;
-    private Vector3D up;
-    private double fieldOfView;
+    private Vector3D Position;
+    private Vector3D Direction;
+    private Vector3D Up;
+    private Vector3D Right;
     private double aspectRatio;
+    private double aspectX;
+    private double aspectY;
     private int imageWidth;
     private int imageHeight;
-
 
     private Vector3D Back;
     private Vector3D U;
@@ -23,19 +25,24 @@ public class Camera {
     private int bottom;
     private double d;
     private Vector3D WD;
+    private Vector3D leftBottomCorner;
 
     //transition from d to FOV
-    public Camera(Vector3D position, Vector3D direction, Vector3D up, int imageWidth, int imageHeight) {
-        this.position = position;
-        this.direction = direction.normalize();
-        this.up = up.normalize();
+    public Camera(Vector3D Position, Vector3D Direction, Vector3D Up, Vector3D right, int imageWidth, int imageHeight) {
+        this.Position = Position;
+        this.Direction = Direction.normalize();
+        this.Up = Up.normalize();
+        this.Right = right.normalize();
         this.aspectRatio = (float) imageWidth / (float) imageHeight;
+        //make procedural
+        this.aspectX = 1.6;
+        this.aspectY = 0.9;
         this.imageWidth = imageWidth;
         this.imageHeight = imageHeight;
 
         //calculate back, U, V with cross product
-        this.Back = position.subtract(direction).normalize();
-        this.U = up.cross(Back).normalize();
+        /*this.Back = Position.subtract(Direction).normalize();
+        this.U = Up.cross(Back).normalize();
         this.V = Back.cross(U).normalize();
 
         this.left = -imageWidth / 2;
@@ -46,47 +53,29 @@ public class Camera {
         //FOV
         this.d = top/Math.tan(Math.tan(Math.PI/4)/2);
 
-        this.WD = this.Back.scale(this.d*-1.0);
+        this.WD = this.Back.scale(this.d*-1.0);*/
 
+        Vector3D leftV = Direction.add(Right.negate().scale(aspectX/2));
+        this.leftBottomCorner = leftV.add(Up.negate().scale(aspectY/2));
 
     }
 
-   /* public ArrayList<math.Ray> generateRays() {
-        ArrayList<math.Ray> rays = new ArrayList<>();
-        double halfWidth = Math.tan(Math.toRadians(fieldOfView) / 2);
-        double halfHeight = halfWidth / aspectRatio;
-        math.Vector3D xAxis = direction.cross(up).normalize();
-        math.Vector3D yAxis = up;
-
-        for (int y = 0; y < imageHeight; y++) {
-            for (int x = 0; x < imageWidth; x++) {
-                double xNorm = (x + 0.5) / imageWidth;
-                double yNorm = (y + 0.5) / imageHeight;
-                double xPixel = (2 * xNorm - 1) * halfWidth;
-                double yPixel = (1 - 2 * yNorm) * halfHeight;
-                math.Vector3D pixelPos = position.add(direction.scale(1)).add(xAxis.scale(xPixel)).add(yAxis.scale(yPixel));
-                math.Vector3D rayDirection = pixelPos.subtract(position).normalize();
-                rays.add(new math.Ray(position, rayDirection));
-            }
-        }
-
-        return rays;
-    }*/
+    //Ray vom Auge zum Bildpunkt
+    public Ray eyeToImage(int x, int y, int imageWidth, int imageHeight) {
+        Vector3D ray = leftBottomCorner.add(Right.scale(x*(aspectX/imageWidth)).add(Up.scale(y*(aspectY/imageHeight))));
+        return new Ray(Position, ray);
+    }
 
     public Vector3D getPosition() {
-        return position;
+        return Position;
     }
 
     public Vector3D getDirection() {
-        return direction;
+        return Direction;
     }
 
     public Vector3D getUp() {
-        return up;
-    }
-
-    public double getFieldOfView() {
-        return fieldOfView;
+        return Up;
     }
 
     public double getAspectRatio() {

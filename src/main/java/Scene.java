@@ -17,7 +17,7 @@ public class Scene {
         objects.add(new Sphere(new Vector3D(0, 0, -10), Color.CYAN, 1));
         objects.add(new Sphere(new Vector3D(5, 0, -10), Color.GREEN, 1));
         objects.add(new Sphere(new Vector3D(-7, -3, -10), Color.RED, 1.5));
-        lights.add(new Light(new Vector3D(1, 1, -2), Color.WHITE, .5));
+        lights.add(new Light(new Vector3D(3, 3, -2), Color.WHITE, 1));
     }
 
     public void addObject(Object3D object) {

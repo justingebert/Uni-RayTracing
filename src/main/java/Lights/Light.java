@@ -5,6 +5,8 @@ import math.Vector3D;
 
 import java.awt.*;
 
+import static math.Util.clamp;
+
 
 //TODO make abtract to implemnt area an spot lights
 public class Light {
@@ -33,11 +35,11 @@ public class Light {
 
         Vector3D light = object.getColVec();
         light = light.scale(angle * (intensity / (lightDir.length() * lightDir.length())));
-        double x = Math.max(Math.min(light.getX(),255), 0);
-        double y = Math.max(Math.min(light.getY(),255), 0);
-        double z = Math.max(Math.min(light.getZ(),255), 0);
-        Vector3D ret = new Vector3D(x, y, z);
-        return ret;
+        double x = clamp(light.getX(), 0, 255);
+        double y = clamp(light.getY(), 0, 255);
+        double z = clamp(light.getZ(), 0, 255);
+
+        return new Vector3D(x, y, z);
     }
 
 }

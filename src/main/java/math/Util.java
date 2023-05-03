@@ -21,4 +21,9 @@ public class Util {
             return new Vector3D(x1,x2,2);
         }
     }
+
+    public static double clamp(double val, double min, double max) {
+        return Math.max(min, Math.min(max, val));
+    }
+
 }

@@ -1,3 +1,5 @@
+package math;
+
 public class Vector3D {
     private double x, y, z;
 
@@ -10,6 +12,9 @@ public class Vector3D {
         this.z = z;
     }
 
+    public Vector3D getValues(){
+        return new Vector3D(x,y,z);
+    }
     public double getX() {
         return x;
     }
@@ -61,7 +66,8 @@ public class Vector3D {
     public Vector3D normalize() {
         double length = length();
         if(length == 0)
-            return new Vector3D(0, 0, 0);
+            throw new IllegalArgumentException("Cannot normalize a vector with length 0");
+            //return new math.Vector3D(0, 0, 0);
 
         return new Vector3D(this.x / length, this.y / length, this.z / length);
     }
@@ -80,6 +86,11 @@ public class Vector3D {
     @Override
     public Vector3D clone() {
         return new Vector3D(x, y, z);
+    }
+
+    //TODO make with subtract and length
+    public static float distance(Vector3D a, Vector3D b) {
+        return (float) Math.sqrt(Math.pow(a.x - b.x, 2)+Math.pow(a.y - b.y, 2)+Math.pow(a.z - b.z, 2));
     }
     @Override
     public String toString() {

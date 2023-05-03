@@ -1,3 +1,8 @@
+package math;
+
+import math.Ray;
+import math.Vector3D;
+
 public class Line {
     public Vector3D A;
     public Vector3D B;

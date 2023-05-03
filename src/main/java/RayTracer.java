@@ -1,7 +1,11 @@
+import Objects.Object3D;
+import math.Intersect;
+import math.Ray;
+import math.Vector3D;
+
 import java.awt.*;
 import java.awt.image.DirectColorModel;
 import java.awt.image.MemoryImageSource;
-import java.util.ArrayList;
 
 
 import javax.swing.ImageIcon;
@@ -38,23 +42,23 @@ public class RayTracer {
                 Vector3D s2 = camera.getV().scale(v);
                 Vector3D S = s1.add(s2);
                 Vector3D Dir = S.normalize();
+                Ray ray = new Ray(Dir, camera.getDirection());
 
-                Object3D intersect = null;
-                //-1 why tho???
-                double smallestDistance = Double.MAX_VALUE-1;
-                //anything intersecting that is smaller than ifinity at that ray
+                Object3D objects = null;
+                Intersect nearestIntersection = null;
                 for(Object3D object : Scene.getScene().objects) {
-                    double newDistance = object.calculateIntersection(camera.getPosition(), Dir);
-                    if (newDistance < smallestDistance && newDistance > 0) {
-                        smallestDistance = newDistance;
-                        intersect = object;
+
+                    Vector3D intersection = object.calculateIntersection(ray);
+                    if (intersection != null && (nearestIntersection == null || Vector3D.distance(nearestIntersection.getPosition(), ray.getOrigin()) > Vector3D.distance(intersection, ray.getOrigin()))) {
+                        nearestIntersection = new Intersect(ray, object, intersection);
+
                     }
                 }
                 //no Object found -> black or BG color
-                if (intersect != null) {
-                    pixels[y * resX + x] = intersect.getColor();
+                if (nearestIntersection != null) {
+                    pixels[y * resX + x] = nearestIntersection.getHitObject().getColor();
                 } else {
-                    pixels[y * resX + x] = Color.BLUE.getRGB();
+                    pixels[y * resX + x] = Color.BLACK.getRGB();
                 }
 
             }

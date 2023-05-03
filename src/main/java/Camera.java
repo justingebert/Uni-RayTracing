@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import math.Vector3D;
 
 public class Camera {
 
@@ -51,12 +51,12 @@ public class Camera {
 
     }
 
-   /* public ArrayList<Ray> generateRays() {
-        ArrayList<Ray> rays = new ArrayList<>();
+   /* public ArrayList<math.Ray> generateRays() {
+        ArrayList<math.Ray> rays = new ArrayList<>();
         double halfWidth = Math.tan(Math.toRadians(fieldOfView) / 2);
         double halfHeight = halfWidth / aspectRatio;
-        Vector3D xAxis = direction.cross(up).normalize();
-        Vector3D yAxis = up;
+        math.Vector3D xAxis = direction.cross(up).normalize();
+        math.Vector3D yAxis = up;
 
         for (int y = 0; y < imageHeight; y++) {
             for (int x = 0; x < imageWidth; x++) {
@@ -64,9 +64,9 @@ public class Camera {
                 double yNorm = (y + 0.5) / imageHeight;
                 double xPixel = (2 * xNorm - 1) * halfWidth;
                 double yPixel = (1 - 2 * yNorm) * halfHeight;
-                Vector3D pixelPos = position.add(direction.scale(1)).add(xAxis.scale(xPixel)).add(yAxis.scale(yPixel));
-                Vector3D rayDirection = pixelPos.subtract(position).normalize();
-                rays.add(new Ray(position, rayDirection));
+                math.Vector3D pixelPos = position.add(direction.scale(1)).add(xAxis.scale(xPixel)).add(yAxis.scale(yPixel));
+                math.Vector3D rayDirection = pixelPos.subtract(position).normalize();
+                rays.add(new math.Ray(position, rayDirection));
             }
         }
 

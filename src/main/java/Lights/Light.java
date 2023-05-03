@@ -1,3 +1,7 @@
+package Lights;
+
+import math.Vector3D;
+
 public interface Light {
 
     Vector3D getPosition();

@@ -1,3 +1,7 @@
+package math;
+
+import math.Vector3D;
+
 public class Util {
     //returns Nullstellen und in z Anzahl der Lösungen
     public static Vector3D abcFormel(double a, double b, double c){

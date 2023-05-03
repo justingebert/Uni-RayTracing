@@ -1,22 +1,21 @@
+package Objects;
+
+import Objects.Object3D;
+import math.Ray;
+import math.Util;
+import math.Vector3D;
+
 import java.awt.*;
 
-public class Sphere implements Object3D {
-
-    Vector3D position;
+public class Sphere extends Object3D {
     private double radius;
-    Color c = Color.CYAN;
 
-    public Sphere(Vector3D position, double radius) {
-        this.position = position;
+    public Sphere(Vector3D position,Color color, double radius) {
+        super(position, color);
         this.radius = radius;
     }
 
-    @Override
-    public int getColor() {
-        return c.getRGB();
-    }
-
-    //replace x with Ray -> ausmultiplizieren -> quadratische Gleichung
+    //replace x with math.Ray -> ausmultiplizieren -> quadratische Gleichung
     @Override
     public double calculateIntersection(Vector3D origin, Vector3D direction) {
 
@@ -56,6 +55,26 @@ public class Sphere implements Object3D {
             return Double.MAX_VALUE;
         }
     }
+
+    @Override
+    public Vector3D calculateIntersection(Ray ray) {
+        //scalar von rayOrigin zu Kugelmitte
+        double t = Vector3D.dot(position.subtract(ray.getOrigin()), ray.getDirection());
+        //vektor von rayOrigin zu Schnittpunkt
+        Vector3D p =  ray.getOrigin().add(ray.getDirection().scale(t));
+
+        Abstand
+        double y = position.subtract(p).length();
+        if (y < radius) {
+            double x = (float) Math.sqrt(radius*radius - y*y);
+            double t1 = t-x;
+            if (t1 > 0) return ray.getOrigin().add(ray.getDirection().scale(t1));
+            else return null;
+        } else {
+            return null;
+        }
+    }
+
     @Override
     public Vector3D getNormalAt(Vector3D point) {
         return point.subtract(position).normalize();

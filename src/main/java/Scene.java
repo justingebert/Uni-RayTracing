@@ -1,3 +1,9 @@
+import Lights.Light;
+import Objects.Object3D;
+import Objects.Sphere;
+import math.Vector3D;
+
+import java.awt.*;
 import java.util.ArrayList;
 
 public class Scene {
@@ -8,7 +14,11 @@ public class Scene {
 
 
     public Scene(){
-        objects.add(new Sphere(new Vector3D(0, 0, -5), 6));
+        objects.add(new Sphere(new Vector3D(1, 1, -10), Color.CYAN, 50.0));
+    }
+
+    public void addObject(Object3D object) {
+        this.objects.add(object);
     }
 
     public static Scene getScene(){

@@ -1,3 +1,7 @@
+package Lights;
+
+import math.Vector3D;
+
 public class PointLight implements Light {
 
     Vector3D position;

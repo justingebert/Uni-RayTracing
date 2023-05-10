@@ -9,13 +9,13 @@ import static math.Util.clamp;
 
 
 //TODO make abtract to implemnt area an spot lights
-public class Light {
+public class PointLight {
 
     Vector3D position;
     public Color color;
     public double intensity;
 
-    public Light(Vector3D position, Color color, double intensity){
+    public PointLight(Vector3D position, Color color, double intensity){
         this.position = position;
         this.color = color;
         this.intensity = intensity;
@@ -24,6 +24,7 @@ public class Light {
         return position;
     };
 
+    //
     public Vector3D diffLight(Vector3D point, Object3D object){
         Vector3D normal = object.getNormalAt(point);
         Vector3D lightDir = position.subtract(point).normalize();
@@ -34,7 +35,13 @@ public class Light {
         double angle = Vector3D.dot(lightDir.normalize(), normal);
 
         Vector3D light = object.getColVec();
-        light = light.scale(angle * (intensity / (lightDir.length() * lightDir.length())));
+        //proportionalität zwischen angle und intensity
+        //dir*normal = |dir|*|normal|*cos(angle)
+        //objcetColor * (dir*normal)* intensity/dir.length^2
+        light = light.scale(angle * (intensity / (distance * distance) + 1 ));
+
+
+        //clamp values to RGB range
         double x = clamp(light.getX(), 0, 255);
         double y = clamp(light.getY(), 0, 255);
         double z = clamp(light.getZ(), 0, 255);

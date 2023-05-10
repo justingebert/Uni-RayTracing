@@ -29,6 +29,8 @@ public abstract class Object3D {
     public abstract double calculateIntersection(Vector3D origin, Vector3D direction);
 
     public abstract Vector3D calculateIntersection(Ray ray);
+
+    public abstract Vector3D calculateIntersection2(Ray ray);
     public abstract Vector3D getNormalAt(Vector3D point);
 
 }

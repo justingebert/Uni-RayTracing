@@ -44,6 +44,8 @@ public class RayTracer {
                 Vector3D S = s1.add(s2);
                 Vector3D Dir = S.normalize();
                 */
+
+                //gets the ray from the camera to the pixel
                 Ray ray = camera.eyeToImage(x, y, resX, resY);
 
                 Object3D objects = null;
@@ -51,16 +53,19 @@ public class RayTracer {
                 for(Object3D object : Scene.getScene().objects) {
 
                     Vector3D intersection = object.calculateIntersection(ray);
+                    //if intersection is closer than the last one -> new nearestIntersection
                     if (intersection != null && (nearestIntersection == null || Vector3D.distance(nearestIntersection.getPosition(), ray.getOrigin()) > Vector3D.distance(intersection, ray.getOrigin()))) {
                         nearestIntersection = new Intersect(ray, object, intersection);
                     }
                 }
-                //no Object found -> black or BG color
+
                 if (nearestIntersection != null) {
                     Vector3D light = Scene.getScene().lights.get(0).diffLight(nearestIntersection.getPosition(), nearestIntersection.getHitObject());
                     pixels[y * resX + x] = light.toRGB();
                     //pixels[y * resX + x] = nearestIntersection.getHitObject().getColor();
-                } else {
+                }
+                //no Object found ->  BG color
+                else {
                     pixels[y * resX + x] = Color.BLACK.getRGB();
                 }
 

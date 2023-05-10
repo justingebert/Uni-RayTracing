@@ -75,19 +75,39 @@ public class Sphere extends Object3D {
         }
     }
 
-   /* @Override
-    public Vector3D calculateIntersection(Ray ray) {
+    @Override
+    public Vector3D calculateIntersection2(Ray ray) {
         //scalar von rayOrigin zu Kugelmitte
         Vector3D oc = ray.getOrigin().subtract(position);
         double a = Vector3D.dot(ray.getDirection(), ray.getDirection());
         double b = 2.0 * Vector3D.dot(oc, ray.getDirection());
         double c = Vector3D.dot(oc, oc) - radius * radius;
 
-        double discriminant = b * b - 4 * a * c;
-        if(discriminant < 0) return null;
-        double wurzel = Math.sqrt(discriminant);
-
-    }*/
+        //result is scalar for ray
+        Vector3D result = Util.abcFormel(a,b,c);
+        int solutions = (int) Math.round(result.getZ());
+        double t;
+        if(solutions == 0){
+            return null;
+        }
+        else if (solutions == 1){
+            t = result.getX();
+            return ray.getOrigin().add(ray.getDirection().scale(t));
+        } else if (solutions == 2){
+            double t1 = result.getX();
+            double t2 = result.getY();
+            if(t1 < 0 && t2 < 0){
+                return null;
+            } else if (t1 < 0){
+                return ray.getOrigin().add(ray.getDirection().scale(t2));
+            } else if (t2 < 0){
+                return ray.getOrigin().add(ray.getDirection().scale(t1));
+            } else {
+                return ray.getOrigin().add(ray.getDirection().scale(Math.min(t1, t2)));
+            }
+        }
+        return null;
+    }
 
 
 

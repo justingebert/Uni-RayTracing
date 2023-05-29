@@ -24,7 +24,7 @@ public class PointLight {
         return position;
     };
 
-    //
+    //TODO cook toorance model
     public Vector3D diffLight(Vector3D point, Object3D object){
         Vector3D normal = object.getNormalAt(point);
         Vector3D lightDir = position.subtract(point).normalize();

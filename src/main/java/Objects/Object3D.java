@@ -1,5 +1,6 @@
 package Objects;
 
+import Materials.Material;
 import math.*;
 import java.awt.*;
 
@@ -7,10 +8,11 @@ public abstract class Object3D {
 
     protected Vector3D position;
     protected Color color;
+    protected Material material;
 
-    public Object3D(Vector3D position, Color color){
+    public Object3D(Vector3D position, Material material){
         this.position = position;
-        this.color = color;
+        this.material = material;
     }
 
     public Vector3D getPosition() {

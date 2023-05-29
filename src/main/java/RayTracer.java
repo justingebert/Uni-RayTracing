@@ -17,6 +17,7 @@ public class RayTracer {
 
     static int resX = 1920;
     static int resY = 1080;
+    static double gamma = 2.2;
     static int[] pixels = new int[resX * resY];
 
     int sphereZ = 10;
@@ -60,10 +61,22 @@ public class RayTracer {
                         nearestIntersection = new Intersect(ray, object, intersection);
                     }
                 }
-
+                //TODO multiple light sources
                 if (nearestIntersection != null) {
                     Vector3D light = Scene.getScene().lights.get(0).diffLight(nearestIntersection.getPosition(), nearestIntersection.getHitObject());
                     pixels[y * resX + x] = light.toRGB();
+
+                    // Apply gamma correction
+                    double r = Math.pow(finalColor.getRed(), 1.0 / gamma);
+                    double g = Math.pow(finalColor.getGreen(), 1.0 / gamma);
+                    double b = Math.pow(finalColor.getBlue(), 1.0 / gamma);
+
+                    // Clamp the color values to [0, 1]
+                    r = Math.max(0.0, Math.min(r, 1.0));
+                    g = Math.max(0.0, Math.min(g, 1.0));
+                    b = Math.max(0.0, Math.min(b, 1.0));
+
+
                     //pixels[y * resX + x] = nearestIntersection.getHitObject().getColor();
                 }
                 //no Object found ->  BG color
@@ -71,11 +84,13 @@ public class RayTracer {
                     pixels[y * resX + x] = Color.BLACK.getRGB();
                 }
 
+
             }
         }
     }
     public static void main(String[] args) {
         trace();
+
         //RENDER ARRAY IN WINDOW
         MemoryImageSource mis = new MemoryImageSource(resX, resY, new DirectColorModel(24, 0xff0000, 0xff00, 0xff), pixels, 0, resX);
         Image image = Toolkit.getDefaultToolkit().createImage(mis);

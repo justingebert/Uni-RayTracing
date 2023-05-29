@@ -109,7 +109,7 @@ public class CSG extends Object3D{
                 if (leftNormal != null && rightNormal == null) {
                     return leftNormal;
                 } else {
-                    return null;
+                    return rightNormal;
                 }
             default:
                 return null;

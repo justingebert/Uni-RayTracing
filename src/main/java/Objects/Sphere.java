@@ -1,5 +1,6 @@
 package Objects;
 
+import Materials.Material;
 import math.Matrix4x4;
 import math.Ray;
 import math.Util;
@@ -11,8 +12,8 @@ public class Sphere extends Object3D {
     private double radius;
     private Matrix4x4 transformationMatrix = new Matrix4x4();
 
-    public Sphere(Vector3D position,Color color, double radius) {
-        super(position, color);
+    public Sphere(Vector3D position, Material material, double radius) {
+        super(position, material);
         this.radius = radius;
     }
 

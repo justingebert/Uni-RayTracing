@@ -1,5 +1,6 @@
 package Objects;
 
+import Materials.Material;
 import math.Matrix4x4;
 import math.Ray;
 import math.Vector3D;
@@ -7,8 +8,8 @@ import math.Vector3D;
 import java.awt.*;
 
 public class Cylinder extends Object3D{
-    public Cylinder(Vector3D position, Color color) {
-        super(position, color);
+    public Cylinder(Vector3D position, Material material) {
+        super(position, material);
     }
     @Override
     public Vector3D calculateIntersection(Ray ray) {

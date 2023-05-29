@@ -1,5 +1,6 @@
 package Objects;
 
+import Materials.Material;
 import math.Matrix4x4;
 import math.Ray;
 import math.Vector3D;
@@ -14,8 +15,8 @@ public class Quadric extends Object3D{
     //1*x^2+ 1*y^2+ 1*z^2+ 2*(0*x*y+ 0*x*z+ 0*y*z+ 0*x+ 0*y+0*z) + -1 < 0
 
     double a, b, c, d, e, f, g, h, i, j;
-    public Quadric(double a,double b, double c, double d, double e, double f, double g, double h, double i, double j,Vector3D position, Color color) {
-        super(position, color);
+    public Quadric(double a,double b, double c, double d, double e, double f, double g, double h, double i, double j,Vector3D position, Material material) {
+        super(position, material);
         this.a = a;
         this.b = b;
         this.c = c;

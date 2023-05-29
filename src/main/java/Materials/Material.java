@@ -2,15 +2,17 @@ package Materials;
 
 import math.Vector3D;
 
+import java.awt.*;
+
 public class Material {
-    Vector3D color;
+    Color color;
     double metalness;
     double roughness;
     double reflectivity;
     double transprancy;
 
     //add a constructor
-    public Material(Vector3D color, double metalness, double roughness, double reflectivity, double transprancy) {
+    public Material(Color color, double metalness, double roughness, double reflectivity, double transprancy) {
         this.color = color;
         this.metalness = metalness;
         this.roughness = roughness;

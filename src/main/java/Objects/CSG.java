@@ -1,5 +1,6 @@
 package Objects;
 
+import Materials.Material;
 import Objects.Object3D;
 import math.Matrix4x4;
 import math.Ray;
@@ -20,8 +21,8 @@ public class CSG extends Object3D{
     private Object3D right;
     private CSGoperation operation;
 
-    public CSG(Vector3D position, Color color, CSGoperation operation, Object3D left, Object3D right) {
-        super(position, color);
+    public CSG(Vector3D position, Material material, CSGoperation operation, Object3D left, Object3D right) {
+        super(position, material);
         this.operation = operation;
         this.left = left;
         this.right = right;

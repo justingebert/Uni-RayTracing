@@ -1,5 +1,6 @@
 package Objects;
 
+import Materials.Material;
 import math.Matrix4x4;
 import math.Ray;
 import math.Vector3D;
@@ -10,8 +11,8 @@ public class Plane extends Object3D{
 
     private Vector3D normal;
 
-    public Plane(Vector3D position, Color color, Vector3D normal) {
-        super(position, color);
+    public Plane(Vector3D position, Material material, Vector3D normal) {
+        super(position, material);
         this.normal = normal.normalize();
     }
     @Override

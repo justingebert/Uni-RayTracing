@@ -26,11 +26,13 @@ public abstract class Object3D {
     }
 
     //TODO change to implement ray class
-    public abstract double calculateIntersection(Vector3D origin, Vector3D direction);
+    //public abstract double calculateIntersection(Vector3D origin, Vector3D direction);
 
     public abstract Vector3D calculateIntersection(Ray ray);
 
-    public abstract Vector3D calculateIntersection2(Ray ray);
+    public abstract void applyTransformation(Matrix4x4 transformationMatrix);
+
+    //public abstract Vector3D calculateIntersection2(Ray ray);
     public abstract Vector3D getNormalAt(Vector3D point);
 
 }

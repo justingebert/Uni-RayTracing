@@ -22,7 +22,7 @@ public class RayTracer {
     int sphereZ = 10;
 
     static Camera camera = new Camera(
-            new Vector3D(0, 0, 1),
+            new Vector3D(0, 0, 10),
             new Vector3D(0, 0, -1),
             new Vector3D(0, 1, 0),
             new Vector3D(1, 0, 0),
@@ -34,16 +34,18 @@ public class RayTracer {
     public static void trace() {
         for (int y = 0; y < resY; ++y) {
             for (int x = 0; x < resX; ++x) {
+                /*
                 //+0.5 to get the center of the pixel
-                /*double u = camera.getLeft() + (camera.getRight() - camera.getLeft()) * (x + 0.5) / resX;
-                double v = camera.getBottom() + (camera.getTop() - camera.getBottom()) * (y + 0.5) / resY;*/
+                double u = camera.getLeft() + (camera.getRight() - camera.getLeft()) * (x + 0.5) / resX;
+                double v = camera.getBottom() + (camera.getTop() - camera.getBottom()) * (y + 0.5) / resY;
 
                 //Vector for current direction of ray
-                /*Vector3D s1 = camera.getU().scale(u);
+                Vector3D s1 = camera.getU().scale(u);
                 Vector3D s2 = camera.getV().scale(v);
                 Vector3D S = s1.add(s2);
                 Vector3D Dir = S.normalize();
                 */
+
 
                 //gets the ray from the camera to the pixel
                 Ray ray = camera.eyeToImage(x, y, resX, resY);

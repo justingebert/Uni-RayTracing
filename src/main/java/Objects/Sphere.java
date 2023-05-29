@@ -1,6 +1,6 @@
 package Objects;
 
-import Objects.Object3D;
+import math.Matrix4x4;
 import math.Ray;
 import math.Util;
 import math.Vector3D;
@@ -9,6 +9,7 @@ import java.awt.*;
 
 public class Sphere extends Object3D {
     private double radius;
+    private Matrix4x4 transformationMatrix = new Matrix4x4();
 
     public Sphere(Vector3D position,Color color, double radius) {
         super(position, color);
@@ -16,7 +17,6 @@ public class Sphere extends Object3D {
     }
 
     //replace x with math.Ray -> ausmultiplizieren -> quadratische Gleichung
-    @Override
     public double calculateIntersection(Vector3D origin, Vector3D direction) {
 
         double a = Vector3D.dot(direction,direction);
@@ -58,17 +58,23 @@ public class Sphere extends Object3D {
 
     @Override
     public Vector3D calculateIntersection(Ray ray) {
+        Ray transformedRay = new Ray(
+                this.transformationMatrix.multiplyPoint(ray.getOrigin()),
+                this.transformationMatrix.multiplyDirection(ray.getDirection())
+        );
+
+
         //scalar von rayOrigin zu Kugelmitte
-        double t = Vector3D.dot(position.subtract(ray.getOrigin()), ray.getDirection());
+        double t = Vector3D.dot(position.subtract(transformedRay.getOrigin()), transformedRay.getDirection());
         //vektor von rayOrigin zu Schnittpunkt
-        Vector3D p =  ray.getOrigin().add(ray.getDirection().scale(t));
+        Vector3D p =  transformedRay.getOrigin().add(transformedRay.getDirection().scale(t));
 
         //Abstand
         double y = position.subtract(p).length();
         if (y < radius) {
             double x = (float) Math.sqrt(radius*radius - y*y);
             double t1 = t-x;
-            if (t1 > 0) return ray.getOrigin().add(ray.getDirection().scale(t1));
+            if (t1 > 0) return transformedRay.getOrigin().add(transformedRay.getDirection().scale(t1));
             else return null;
         } else {
             return null;
@@ -76,6 +82,11 @@ public class Sphere extends Object3D {
     }
 
     @Override
+    public void applyTransformation(Matrix4x4 transformationMatrix) {
+        this.transformationMatrix = transformationMatrix;
+    }
+
+    /*@Override
     public Vector3D calculateIntersection2(Ray ray) {
         //scalar von rayOrigin zu Kugelmitte
         Vector3D oc = ray.getOrigin().subtract(position);
@@ -107,9 +118,7 @@ public class Sphere extends Object3D {
             }
         }
         return null;
-    }
-
-
+    }*/
 
     @Override
     public Vector3D getNormalAt(Vector3D point) {

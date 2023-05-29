@@ -2,3 +2,4 @@ chat.openai.com
 https://raytracing.github.io/books/RayTracingInOneWeekend.html
 https://www.youtube.com/watch?v=qpb19vrBpJ4&list=PLNmsVeXQZj7rvhHip_LTM-J-5wHw7dWnw&ab_channel=TheMorpheusTutorials
 https://github.com/carl-vbn/pure-java-raytracer
+https://github.com/mpsalisbury/raytracer/tree/master

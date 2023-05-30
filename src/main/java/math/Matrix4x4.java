@@ -197,9 +197,22 @@ public class Matrix4x4 {
         return array;
     }
 
+    public double [] getQuadricParameters(){
+        double [] array = new double[10];
+        int k = 0;
+        for(int i = 0; i < 4; i++){
+            for(int j = i; j < 4; j++, k++){
+                array[k] = matrix[i][j];
+            }
+        }
+        return array;
+    }
+
     public void print() {
         for (int i = 0; i < 4; i++) {
             System.out.println(Arrays.toString(matrix[i]));
+
         }
+        System.out.println();
     }
 }

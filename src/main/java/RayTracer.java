@@ -63,7 +63,7 @@ public class RayTracer {
                 }
                 //TODO multiple light sources
                 if (nearestIntersection != null) {
-                    Vector3D light = Scene.getScene().lights.get(0).diffLight(nearestIntersection.getPosition(), nearestIntersection.getHitObject());
+                    Vector3D light = Scene.getScene().lights.get(0).cookTorranceLight(nearestIntersection.getPosition(), nearestIntersection.getHitObject(),ray);
                     //pixels[y * resX + x] = light.toRGB();
 
                     // Apply gamma correction

@@ -8,7 +8,7 @@ public abstract class Object3D {
 
     protected Vector3D position;
     protected Color color;
-    protected Material material;
+    public Material material;
 
     public Object3D(Vector3D position, Material material){
         this.position = position;

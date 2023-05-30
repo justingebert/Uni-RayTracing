@@ -5,19 +5,65 @@ import math.Vector3D;
 import java.awt.*;
 
 public class Material {
-    Color color;
-    double metalness;
-    double roughness;
-    double reflectivity;
-    double transprancy;
+    public Color color;
+    public double metalness;
+    public double roughness;
+    public double reflectivity;
+    public double transprancy;
+
+    
 
     //add a constructor
-    public Material(Color color, double metalness, double roughness, double reflectivity, double transprancy) {
+    public Material(Color color, double metallness, double roughness, double reflectivity, double transprancy) {
         this.color = color;
-        this.metalness = metalness;
+        this.metalness = metallness;
         this.roughness = roughness;
         this.reflectivity = reflectivity;
         this.transprancy = transprancy;
     }
 
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public double getMetalness() {
+        return metalness;
+    }
+
+    public void setMetalness(double metalness) {
+        this.metalness = metalness;
+    }
+
+    public double getRoughness() {
+        return roughness;
+    }
+
+    public void setRoughness(double roughness) {
+        this.roughness = roughness;
+    }
+
+    public double getReflectivity() {
+        return reflectivity;
+    }
+
+    public void setReflectivity(double reflectivity) {
+        this.reflectivity = reflectivity;
+    }
+
+    public double getTransprancy() {
+        return transprancy;
+    }
+
+    public void setTransprancy(double transprancy) {
+        this.transprancy = transprancy;
+    }
+    
+    public Vector3D getAlbedo(){
+        return new Vector3D(color.getRed(), color.getGreen(), color.getBlue()).scale(1.0/255.0);
+    }
+    
 }

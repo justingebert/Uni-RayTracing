@@ -51,20 +51,33 @@ public class Quadric extends Object3D{
         double i = this.i;
         double j = this.j;
 
+
         double A = a * dx * dx + b * dy * dy + c * dz * dz + d * dx * dy + e * dx * dz + f * dy * dz;
         double B = 2 * (a * ox * dx + b * oy * dy + c * oz * dz) + d * (ox * dy + oy * dx) + e * (ox * dz + oz * dx) + f * (oy * dz + oz * dy) + g * dx + h * dy + i * dz;
         double C = a * ox * ox + b * oy * oy + c * oz * oz + d * ox * oy + e * ox * oz + f * oy * oz + g * ox + h * oy + i * oz + j;
 
+        //double A = a * dx * dx + b * dy * dy + c * dz * dz + 2*d*dx*dy + 2*e*dx*dz + f * dy * dz;
+        //double B = 2 * (a * ox * dx + b * oy * dy + c * oz * dz) + d * (ox * dy + oy * dx) + e * (ox * dz + oz * dx) + f * (oy * dz + oz * dy) + g * dx + h * dy + i * dz;
+        //double C = a * ox * ox + b * oy * oy + c * oz * oz + 2*(d * ox * oy + e * ox * oz + f * oy * oz + g * ox + h * oy + i * oz) - j;
         // Calculate the discriminant of the quadratic equation
         double discriminant = B * B - 4 * A * C;
 
+        //TODO a can't be zero
         if (discriminant < 0) {
             // No intersection
             return null;
         } else {
-            // Calculate the solutions of the quadratic equation
-            double t1 = (-B - sqrt(discriminant)) / (2 * A);
-            double t2 = (-B + sqrt(discriminant)) / (2 * A);
+            /*double t1 = 0;
+            double t2 = 0;
+            if(A == 0 && B != 0){
+                t1 = -C/B;
+                t2 = -C/B;*/
+            //}else{
+                // Calculate the solutions of the quadratic equation
+                double t1 = (-B - Math.sqrt(discriminant)) / (2 * A);
+                double t2 = (-B + Math.sqrt(discriminant)) / (2 * A);
+
+            //}
 
             if (t1 < 0 && t2 < 0) {
                 // Intersection points are behind the ray origin
@@ -72,7 +85,8 @@ public class Quadric extends Object3D{
             }
 
             double t = (t1 < t2 && t1 >= 0) ? t1 : t2; // Choose the closer intersection point
-
+            //System.out.println("B: " + B);
+            //System.out.println("t: " + t);
             return ray.getOrigin().add(ray.getDirection().scale(t));
         }
     }
@@ -83,11 +97,16 @@ public class Quadric extends Object3D{
        Matrix4x4 inverse = transformationMatrix;
        Matrix4x4 quadric = new Matrix4x4();
 
-       quadric.setQuadric(a,b,c,d,e,f,g,h,i,j);
 
-       Matrix4x4 transformedQuadric = transposed.multiply(quadric.multiply(inverse));
+       quadric.setQuadric(this.a,this.b,this.c,this.d,this.e,this.f,this.g,this.h,this.i,this.j);
+       quadric.print();
+
+       Matrix4x4 transformedQuadric = transposed.multiply(quadric).multiply(inverse);
        transformedQuadric.print();
        double [][] quadricArray = transformedQuadric.getMatrix();
+
+       //setQuadric(transformedQuadric.getQuadricParameters());
+
        this.a = quadricArray[0][0];
        this.b = quadricArray[1][1];
        this.c = quadricArray[2][2];
@@ -97,7 +116,8 @@ public class Quadric extends Object3D{
        this.g = quadricArray[0][3];
        this.h = quadricArray[1][3];
        this.i = quadricArray[2][3];
-       this.j = quadricArray[2][1];
+       this.j = quadricArray[3][3];
+       print();
     }
 
     @Override
@@ -114,5 +134,16 @@ public class Quadric extends Object3D{
         // Create and return the surface normal vector
         return new Vector3D (nx, ny, nz).normalize();
     }
+
+    public void print(){
+        Matrix4x4 quadric = new Matrix4x4();
+        quadric.setQuadric(this.a,this.b,this.c,this.d,this.e,this.f,this.g,this.h,this.i,this.j);
+        quadric.print();
+    }
+
+    public void setQuadric(Matrix4x4 quadric){
+
+    }
+
 
 }

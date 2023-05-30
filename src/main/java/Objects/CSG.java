@@ -67,7 +67,7 @@ public class CSG extends Object3D{
 
     private Vector3D difference(Vector3D left, Vector3D right, Ray ray) {
         // Return the left intersection if it exists and the right intersection doesn't
-        if (left != null && right != null) {
+        if (left != null && right == null) {
             return left;
         } else {
             return null;

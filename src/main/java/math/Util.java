@@ -2,6 +2,8 @@ package math;
 
 import math.Vector3D;
 
+import java.awt.*;
+
 public class Util {
     //returns Nullstellen und in z Anzahl der Lösungen
     public static Vector3D abcFormel(double a, double b, double c){
@@ -26,4 +28,7 @@ public class Util {
         return Math.max(min, Math.min(max, val));
     }
 
+    public static Vector3D colorToVector3D(Color c) {
+        return new Vector3D(c.getRed(), c.getGreen(), c.getBlue());
+    }
 }

@@ -127,9 +127,9 @@ public class PointLight {
         Vector3D l2 = kD.multiply(albedoG).add(kS);
         //System.out.println(l1);
         //System.out.println(l2);
-        Vector3D light = kS;
+        Vector3D light = l1;
         //System.out.println(light);
-        //Vector3D light = this.getClampedColor().scale(D);
+        //Vector3D light = this.getClampedColor().scale(D*G);
 
         //gammarisieren
         double rC = Math.pow(clamp(light.getX(), 0, 1),0.45)*255;

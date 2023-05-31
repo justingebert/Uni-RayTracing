@@ -6,7 +6,7 @@ package math;
 import java.util.Arrays;
 
 public class Matrix4x4 {
-    private double[][] matrix;
+    public double[][] matrix;
 
     public Matrix4x4() {
         matrix = new double[4][4];
@@ -14,6 +14,10 @@ public class Matrix4x4 {
         matrix[1][1] = 1.0;
         matrix[2][2] = 1.0;
         matrix[3][3] = 1.0;
+    }
+
+    public Matrix4x4(double[][] matrix) {
+        this.matrix = matrix;
     }
 
     public double [] [] getMatrix() {
@@ -46,16 +50,9 @@ public class Matrix4x4 {
     }
 
     public void setQuadricTranslation(double tx, double ty, double tz) {
-        Matrix4x4 temp = new Matrix4x4();
-        temp.matrix[0][3] = -1*tx;
-        temp.matrix[1][3] = -1*ty;
-        temp.matrix[2][3] = -1*tz;
-
         matrix[0][3] = -1*tx;
         matrix[1][3] = -1*ty;
         matrix[2][3] = -1*tz;
-
-        this.multiply(temp);
     }
 
     public void setRotationX(double angle) {
@@ -165,19 +162,21 @@ public class Matrix4x4 {
     }
 
     public Matrix4x4 multiply(Matrix4x4 other) {
-        Matrix4x4 result = new Matrix4x4();
 
+        double[][] result = new double[4][4];
+        double[][] matrix1 = getMatrix();
+        double[][] matrix2 = other.getMatrix();
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                result.matrix[i][j] =
-                        matrix[i][0] * other.matrix[0][j] +
-                                matrix[i][1] * other.matrix[1][j] +
-                                matrix[i][2] * other.matrix[2][j] +
-                                matrix[i][3] * other.matrix[3][j];
+                double sum = 0.0;
+                for (int k = 0; k < 4; k++) {
+                    sum += matrix1[i][k] * matrix2[k][j];
+                }
+                result[i][j] = sum;
             }
         }
 
-        return result;
+        return new Matrix4x4(result);
     }
 
     public Matrix4x4 transpose() {

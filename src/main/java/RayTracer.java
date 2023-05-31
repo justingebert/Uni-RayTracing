@@ -67,14 +67,10 @@ public class RayTracer {
                     //pixels[y * resX + x] = light.toRGB();
 
                     // Apply gamma correction
-                    double r = Math.pow(light.getX(), 1.0 / gamma);
-                    double g = Math.pow(light.getY(), 1.0 / gamma);
-                    double b = Math.pow(light.getZ(), 1.0 / gamma);
+                    double r = light.getX();
+                    double g = light.getY();
+                    double b = light.getZ();
 
-                    // Clamp the color values to [0, 1]
-                    r = Math.max(0.0, Math.min(r, 1.0))*255;
-                    g = Math.max(0.0, Math.min(g, 1.0))*255;
-                    b = Math.max(0.0, Math.min(b, 1.0))*255;
 
                     int RGB = (0xFF << 24) | ((int) r << 16) | ((int) g << 8) | (int) b;
                     pixels[y * resX + x] = RGB;

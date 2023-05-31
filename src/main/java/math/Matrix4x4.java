@@ -46,9 +46,16 @@ public class Matrix4x4 {
     }
 
     public void setQuadricTranslation(double tx, double ty, double tz) {
+        Matrix4x4 temp = new Matrix4x4();
+        temp.matrix[0][3] = -1*tx;
+        temp.matrix[1][3] = -1*ty;
+        temp.matrix[2][3] = -1*tz;
+
         matrix[0][3] = -1*tx;
         matrix[1][3] = -1*ty;
         matrix[2][3] = -1*tz;
+
+        this.multiply(temp);
     }
 
     public void setRotationX(double angle) {

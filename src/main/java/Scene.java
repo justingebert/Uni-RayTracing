@@ -17,7 +17,7 @@ public class Scene {
     public Scene(){
 
         Material greenMat = new Material(Color.GREEN,0,0.9,1,0);
-        Material blueMat = new Material(Color.BLUE,0,0.01,1,0);
+        Material blueMat = new Material(Color.BLUE,0,0.1,1,0);
         Material redMat = new Material(Color.RED,0,0.3,0,0);
         Material blackMat = new Material(Color.BLACK,0,0.1,0,0);
         Material cyanMat = new Material(Color.CYAN,0,0.2,0,0);
@@ -31,17 +31,16 @@ public class Scene {
         Matrix4x4 quadricTransformation = new Matrix4x4();
 
         quadricTransformation.setQuadricTranslation(-1.5,0,-5);
-
-        q1.applyTransformation(quadricTransformation);
-        //objects.add(new Sphere(new Vector3D(0, 0, -10), greenMat, 1));
-        //objects.add(new Sphere(new Vector3D(2, 0, -10), blueMat, 1));
+        //q1.applyTransformation(quadricTransformation);
+        objects.add(new Sphere(new Vector3D(-10, 0, -10), greenMat, 2));
+        objects.add(new Sphere(new Vector3D(-8, 0, -10), blueMat, 2));
         //objects.add(csg1);
         //objects.add(new Sphere(new Vector3D(5, 0, -10), blueMat, 1));
         //objects.add(new Sphere(new Vector3D(-7, -3, -10), redMat, 1.5));
         //objects.add(new Plane(new Vector3D(0, 1, -10), cyanMat, new Vector3D(0, 1, 0)));
         objects.add(q1);
         //objects.add(new Quadric( 1, 1, 1, 0, 1, 1, -1, 0, 0,0, new Vector3D(0, 0, -10), Color.CYAN));
-        lights.add(new PointLight(new Vector3D(30, -10, 4), Color.WHITE, 0.6));
+        lights.add(new PointLight(new Vector3D(5, -3, 4), Color.WHITE, .5));
         //lights.add(new PointLight(new Vector3D(-3, 0, 2), Color.WHITE, 0.5));
 
 

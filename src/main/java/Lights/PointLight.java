@@ -94,8 +94,8 @@ public class PointLight {
         Vector3D albedoG = new Vector3D(Math.pow(albedo.getX(),2.2), Math.pow(albedo.getY(),2.2), Math.pow(albedo.getZ(),2.2));
         double r = object3D.material.roughness;
         double m = object3D.material.metalness;
-        //Vector3D f0 =  albedo.scale((1 - m) * 0.04 + m);
-        Vector3D f0 = new Vector3D(0.04,0.04,0.04);
+        Vector3D f0 =  albedo.scale(m).add(one.scale(0.04).scale(1-m));
+        //Vector3D f0 = new Vector3D(0.04,0.04,0.04);
 
         double nv = Math.max(Vector3D.dot(N,V),0);
         double nh = Vector3D.dot(N,H);
@@ -109,25 +109,27 @@ public class PointLight {
 
         double D = Math.pow(r,2)/(Math.pow(Math.PI*(Math.pow(nh,2)*(Math.pow(r,2)-1)+1),2));
         double G = nv / ((nv * (1.0 - rHalf)) + rHalf) * nl / ((nl * (1.0 - rHalf)) + rHalf);
-        Vector3D F = f0.add(one.subtract(f0)).scale(Math.pow((1 - Vector3D.dot(N,V)),5));
+        Vector3D F = f0.add(one.subtract(f0).scale(Math.pow(1 - nv,5)));
 
 
         //entgammern
 
         //Vector3D kS = F.scale(D*G);
-        double kSr = clamp(F.getX()*D*G, 0, 1);
-        double kSg = clamp(F.getY()*D*G, 0, 1);
-        double kSb = clamp(F.getZ()*D*G, 0, 1);
+      /*  double kSr = clamp(f.getX()*D*G, 0, 1);
+        double kSg = clamp(f.getY()*D*G, 0, 1);
+        double kSb = clamp(f.getZ()*D*G, 0, 1);
 
-        Vector3D kS = new Vector3D(kSr, kSg, kSb);
+        Vector3D kS = new Vector3D(kSr, kSg, kSb);*/
 
+        Vector3D kS = F.scale(D*G);
         Vector3D kD = one.subtract(kS).scale(1 - m);
 
         Vector3D l1 = this.getClampedColor().scale(intensity * Vector3D.dot(N,L));
         Vector3D l2 = kD.multiply(albedoG).add(kS);
         //System.out.println(l1);
         //System.out.println(l2);
-        Vector3D light = l1;
+        //Vector3D light = l2.multiply(l1);
+        Vector3D light = kS;
         //System.out.println(light);
         //Vector3D light = this.getClampedColor().scale(D*G);
 

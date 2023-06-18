@@ -81,7 +81,7 @@ public class CSG extends Object3D{
 
     @Override
     public Vector3D getNormalAt(Vector3D point) {
-        double epsilon = 0.0001; // Small value for numerical stability
+        //double epsilon = 0.0001; // Small value for numerical stability
 
         // Calculate the normals at the specified point for the left and right child objects
         Vector3D leftNormal = left.getNormalAt(point);

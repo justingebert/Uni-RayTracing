@@ -59,11 +59,16 @@ public class Quadric extends Object3D{
         double j = this.j;
 
 
-        double A = a * dx2 + b * dy2 + c * dz2 + 2*d * dx * dy + 2*e * dx * dz + 2*f * dy * dz;
+        //double A = a * dx2 + b * dy2 + c * dz2 + 2*d * dx * dy + 2*e * dx * dz + 2*f * dy * dz;
         //TODO klammern angucken
-        double B = 2 * (a * ox * dx + b * oy * dy + c * oz * dz + d * (ox * dy + oy * dx) + e * (ox * dz + oz * dx) + f * (oy * dz + oz * dy) + g * dx + h * dy + i * dz);
+        //double B = 2 * (a * ox * dx + b * oy * dy + c * oz * dz + d * (ox * dy + oy * dx) + e * (ox * dz + oz * dx) + f * (oy * dz + oz * dy) + g * dx + h * dy + i * dz);
         //double B = 2 * (a * ox * dx + b * oy * dy + c * oz * dz + d * ox * dy + d * oy * dx + e * ox * dz + e* oz * dx + f * oy * dz + f* oz * dy + g * dx + h * dy + i * dz);
-        double C = a * ox2 + b * oy2 + c * oz2 + 2*(d * ox * oy + e * ox * oz + f * oy * oz + g * ox + h * oy + i * oz) + j;
+        //double C = a * ox2 + b * oy2 + c * oz2 + 2*(d * ox * oy + e * ox * oz + f * oy * oz + g * ox + h * oy + i * oz) + j;
+
+        double A = a*dx2 + b*dy2 + c*dz2 + 2*(d*dx*dy + e*dx*dz + f*dy*dz);
+        double B = 2*(a*ox*dx + b*oy*dy + c*oz*dz + d * (ox*dy + oy*dx) + e * (ox*dz + oz*dx) + f*(oy*dz + oz+dy) + g*dx + h*dy + i*dz);
+        double C = a*ox2 + b*oy2 + c*oz2 + 2*(d*ox*oy + e*ox*oz + f*oy*oz + g*ox + h*oy + i*oz) + j;
+
         // Calculate the discriminant of the quadratic equation
         double discriminant = B * B - (4 * A * C);
 
@@ -127,9 +132,9 @@ public class Quadric extends Object3D{
         double pz = point.getZ();
 
         // Calculate the components of the surface normal at the given point
-        double nx = 2 * a * px + d * py + e * pz + g;
-        double ny = 2 * b * py + d * px + f * pz + h;
-        double nz = 2 * c * pz + e * px + f * py + i;
+        double nx = 2 * (a * px + d * py + e * pz + g);
+        double ny = 2 * (b * py + d * px + f * pz + h);
+        double nz = 2 * (c * pz + e * px + f * py + i);
 
 
         return new Vector3D (nx, ny, nz).normalize();

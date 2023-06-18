@@ -8,9 +8,7 @@ import java.awt.image.DirectColorModel;
 import java.awt.image.MemoryImageSource;
 
 
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
+import javax.swing.*;
 
 public class RayTracer {
 
@@ -35,18 +33,6 @@ public class RayTracer {
     public static void trace() {
         for (int y = 0; y < resY; ++y) {
             for (int x = 0; x < resX; ++x) {
-                /*
-                //+0.5 to get the center of the pixel
-                double u = camera.getLeft() + (camera.getRight() - camera.getLeft()) * (x + 0.5) / resX;
-                double v = camera.getBottom() + (camera.getTop() - camera.getBottom()) * (y + 0.5) / resY;
-
-                //Vector for current direction of ray
-                Vector3D s1 = camera.getU().scale(u);
-                Vector3D s2 = camera.getV().scale(v);
-                Vector3D S = s1.add(s2);
-                Vector3D Dir = S.normalize();
-                */
-
 
                 //gets the ray from the camera to the pixel
                 Ray ray = camera.eyeToImage(x, y, resX, resY);
@@ -62,6 +48,7 @@ public class RayTracer {
                     }
                 }
                 //TODO multiple light sources
+                //TODO multiple lights -> calc without light vectors one one time rest for every light
                 if (nearestIntersection != null) {
                     Vector3D light = Scene.getScene().lights.get(0).cookTorranceLight(nearestIntersection.getPosition(), nearestIntersection.getHitObject(),ray);
                     //pixels[y * resX + x] = light.toRGB();
@@ -93,9 +80,32 @@ public class RayTracer {
         Image image = Toolkit.getDefaultToolkit().createImage(mis);
 
         JFrame frame = new JFrame();
-        frame.add(new JLabel(new ImageIcon(image)));
+        frame.setLayout(new BorderLayout());
+
+        JPanel sidePanel = new JPanel();
+        sidePanel.setLayout(new BoxLayout(sidePanel, BoxLayout.Y_AXIS));
+        sidePanel.setPreferredSize(new Dimension(200, resY)); // Adjust the width as needed
+
+        JButton button1 = new JButton("Button 1");
+        JButton button2 = new JButton("Button 2");
+        JSlider slider = new JSlider();
+        JComboBox<String> comboBox = new JComboBox<>(new String[]{"Option 1", "Option 2", "Option 3"});
+
+
+        sidePanel.add(button1);
+        sidePanel.add(button2);
+        sidePanel.add(slider);
+        sidePanel.add(comboBox);
+
+        frame.add(sidePanel, BorderLayout.EAST);
+
+        JLabel imageLabel = new JLabel(new ImageIcon(image));
+        frame.add(imageLabel, BorderLayout.CENTER);
+
+
         frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         frame.setVisible(true);
     }
 }

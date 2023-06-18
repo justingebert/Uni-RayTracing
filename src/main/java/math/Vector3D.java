@@ -115,4 +115,8 @@ public class Vector3D {
     public double[] toArray() {
         return new double[]{x, y, z};
     }
+
+    public Vector3D clamp(double min, double max) {
+        return new Vector3D(Math.max(min, Math.min(max, x)), Math.max(min, Math.min(max, y)), Math.max(min, Math.min(max, z)));
+    }
 }

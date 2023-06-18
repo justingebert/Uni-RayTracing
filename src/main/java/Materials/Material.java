@@ -9,7 +9,7 @@ public class Material {
     public double metalness;
     public double roughness;
     public double reflectivity;
-    public double transprancy;
+    public double transparency;
 
     
 
@@ -19,7 +19,7 @@ public class Material {
         this.metalness = metallness;
         this.roughness = roughness;
         this.reflectivity = reflectivity;
-        this.transprancy = transprancy;
+        this.transparency = transprancy;
     }
 
     public Color getColor() {
@@ -54,12 +54,12 @@ public class Material {
         this.reflectivity = reflectivity;
     }
 
-    public double getTransprancy() {
-        return transprancy;
+    public double getTransparency() {
+        return transparency;
     }
 
-    public void setTransprancy(double transprancy) {
-        this.transprancy = transprancy;
+    public void setTransparency(double transparency) {
+        this.transparency = transparency;
     }
     
     public Vector3D getAlbedo(){

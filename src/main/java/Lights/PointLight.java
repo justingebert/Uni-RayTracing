@@ -80,9 +80,6 @@ public class PointLight {
         //n1 = 1
         //n2 = 1.5
 
-
-
-
         Vector3D one = new Vector3D(1.0,1.0,1.0);
         Vector3D N = object3D.getNormalAt(point).normalize();
         Vector3D L = position.subtract(point).normalize();
@@ -112,25 +109,13 @@ public class PointLight {
         Vector3D F = f0.add(one.subtract(f0).scale(Math.pow(1 - nv,5)));
 
 
-        //entgammern
-
-        //Vector3D kS = F.scale(D*G);
-      /*  double kSr = clamp(f.getX()*D*G, 0, 1);
-        double kSg = clamp(f.getY()*D*G, 0, 1);
-        double kSb = clamp(f.getZ()*D*G, 0, 1);
-
-        Vector3D kS = new Vector3D(kSr, kSg, kSb);*/
-
         Vector3D kS = F.scale(D*G);
         Vector3D kD = one.subtract(kS).scale(1 - m);
 
         Vector3D l1 = this.getClampedColor().scale(intensity * Vector3D.dot(N,L));
         Vector3D l2 = kD.multiply(albedoG).add(kS);
-        //System.out.println(l1);
-        //System.out.println(l2);
-        //Vector3D light = l2.multiply(l1);
-        Vector3D light = kS;
-        //System.out.println(light);
+        Vector3D light = l2.multiply(l1);
+        //Vector3D light = kS;
         //Vector3D light = this.getClampedColor().scale(D*G);
 
         //gammarisieren
@@ -138,20 +123,6 @@ public class PointLight {
         double gC = Math.pow(clamp(light.getY(), 0, 1),0.45)*255;
         double bC = Math.pow(clamp(light.getZ(), 0, 1),0.45)*255;
 
-        //double rC = clamp(light.getX(), 0, 1);
-        //double gC = clamp(light.getY(), 0, 1);
-        //double bC = clamp(light.getZ(), 0, 1);
-        //System.out.println("rC: " + rC + " gC: " + gC + " bC: " + bC);
-        //rC = Math.pow(rC,1)*255;
-        //gC = Math.pow(gC,1)*255;
-        //bC = Math.pow(bC,1)*255;
-
-        //rC = clamp(rC, 0, 255);
-        //gC = clamp(gC, 0, 255);
-        //bC = clamp(bC, 0, 255);
-
-
-        //System.out.println("rC: " + rC + " gC: " + gC + " bC: " + bC);
         return new Vector3D(rC, gC, bC);
     }
 

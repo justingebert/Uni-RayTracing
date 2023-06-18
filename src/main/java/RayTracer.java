@@ -1,3 +1,4 @@
+import Objects.Camera;
 import Objects.Object3D;
 import math.Intersect;
 import math.Ray;

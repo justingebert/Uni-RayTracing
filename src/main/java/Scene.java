@@ -1,7 +1,9 @@
 import Lights.PointLight;
 import Materials.Material;
 import Objects.*;
+import math.Intersect;
 import math.Matrix4x4;
+import math.Ray;
 import math.Vector3D;
 
 import java.awt.*;
@@ -12,20 +14,30 @@ public class Scene {
     private static Scene scene;
     ArrayList<Object3D> objects = new ArrayList<Object3D>();
     ArrayList<PointLight> lights = new ArrayList<PointLight>();
+    Camera activeCamera;
+    public Camera getActiveCamera() {
+        return activeCamera;
+    }
+    public void setActiveCamera(Camera activeCamera) {
+        this.activeCamera = activeCamera;
+    }
 
 
     public Scene(){
 
-        Material greenMat = new Material(Color.GREEN,0,0.9,1,0);
-        Material blueMat = new Material(Color.BLUE,0,0.1,1,0);
-        Material redMat = new Material(Color.RED,0,0.05,0,0);
-        Material blackMat = new Material(Color.BLACK,0,0.1,0,0);
-        Material cyanMat = new Material(Color.CYAN,0,0.2,0,0);
+        Material greenMat = new Material(Color.GREEN,0,0.66,0,1);
+        Material blueMat = new Material(Color.BLUE,0,0.25,0.75,1);
+        Material redMat = new Material(Color.RED,0,0.1,0,1.5);
+        Material blackMat = new Material(Color.BLACK,0,0.1,0,1);
+        Material cyanMat = new Material(Color.CYAN,0,0.2,0,1);
 
 
-       Sphere sphere1 = new Sphere(new Vector3D(0, 0, -10), greenMat, 2);
+       Sphere sphere1 = new Sphere(new Vector3D(-1, 0, -10), greenMat, 1.5);
+       Sphere sphere2 = new Sphere(new Vector3D(2, -0, -12), redMat, 1);
+       Sphere sphere3 = new Sphere(new Vector3D(2, -1, -8), blueMat, 1);
+       Sphere sphere4 = new Sphere(new Vector3D(-2.5, 1, -3), blueMat, .5);
 
-       Quadric q1 = new Quadric( 1, 0, 1, 0, 0, 0, 0, 0, 0,-1, new Vector3D(0, 0, -10), redMat);
+       Quadric q1 = new Quadric( 1, 1, 1, 0, 0, 0, 0, 0, 0,-1, new Vector3D(0, 0, -10), redMat);
        Matrix4x4 quadricTransformation = new Matrix4x4();
 
        //TODO multiply matrix
@@ -37,13 +49,27 @@ public class Scene {
 
 
         objects.add(sphere1);
-        objects.add(q1);
-        lights.add(new PointLight(new Vector3D(5, -3, 10), Color.WHITE, .3));
+        objects.add(sphere2);
+        objects.add(sphere3);
+        objects.add(sphere4);
 
+        //objects.add(q1);
+        lights.add(new PointLight(new Vector3D(-10, -9, 10), Color.WHITE, 10));
+        //lights.add(new PointLight(new Vector3D(20, 5, 0), Color.WHITE, 10));
+        lights.add(new PointLight(new Vector3D(50, 10, 3), Color.WHITE, 10));
+
+        lights.add(new PointLight(new Vector3D(-20, 50, 3), Color.WHITE, 10));
     }
 
     public void addObject(Object3D object) {
         this.objects.add(object);
+    }
+
+    public void addLight(PointLight light) {
+        this.lights.add(light);
+    }
+    public ArrayList<PointLight> getLights() {
+        return this.lights;
     }
 
     public static Scene getScene(){
@@ -51,5 +77,17 @@ public class Scene {
             scene = new Scene();
         }
         return scene;
+    }
+
+    public Intersect RayData(Ray ray){
+        Intersect nearestIntersection = null;
+        for(Object3D object : this.objects) {
+            Vector3D intersection = object.calculateIntersection(ray);
+            //if intersection is closer than the last one -> new nearestIntersection
+            if (intersection != null && (nearestIntersection == null || Vector3D.distance(nearestIntersection.getPosition(), ray.getOrigin()) > Vector3D.distance(intersection, ray.getOrigin()))) {
+                nearestIntersection = new Intersect(ray, object, intersection);
+            }
+        }
+        return nearestIntersection;
     }
 }

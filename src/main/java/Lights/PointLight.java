@@ -16,6 +16,9 @@ public class PointLight {
 
     Vector3D position;
     public Color color;
+
+
+
     public double intensity;
 
     public PointLight(Vector3D position, Color color, double intensity){
@@ -23,9 +26,12 @@ public class PointLight {
         this.color = color;
         this.intensity = intensity;
     }
-    Vector3D getPosition(){
+    public Vector3D getPosition(){
         return position;
     };
+    public double getIntensity() {
+        return intensity;
+    }
 
     public Vector3D getClampedColor(){
         return new Vector3D(clamp(color.getRed(), 0, 1), clamp(color.getGreen(), 0, 1), clamp(color.getBlue(), 0, 1));

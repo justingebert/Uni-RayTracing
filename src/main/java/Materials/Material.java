@@ -11,15 +11,16 @@ public class Material {
     public double reflectivity;
     public double transparency;
 
+    public double ioR;
     
-
     //add a constructor
-    public Material(Color color, double metallness, double roughness, double reflectivity, double transprancy) {
+    public Material(Color color, double metalness, double roughness, double transparency, double ioR) {
         this.color = color;
-        this.metalness = metallness;
+        this.metalness = metalness;
         this.roughness = roughness;
-        this.reflectivity = reflectivity;
-        this.transparency = transprancy;
+        this.reflectivity = 1-roughness;
+        this.transparency = transparency;
+        this.ioR = ioR;
     }
 
     public Color getColor() {
@@ -61,7 +62,11 @@ public class Material {
     public void setTransparency(double transparency) {
         this.transparency = transparency;
     }
-    
+
+    public double getIoR() {
+        return ioR;
+    }
+
     public Vector3D getAlbedo(){
         return new Vector3D(color.getRed(), color.getGreen(), color.getBlue()).scale(1.0/255.0);
     }

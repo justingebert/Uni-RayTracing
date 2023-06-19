@@ -14,6 +14,12 @@ public class Vector3D {
         this.z = z;
     }
 
+    public Vector3D(double x){
+        this.x = x;
+        this.y = x;
+        this.z = x;
+    }
+
     public Vector3D getValues(){
         return new Vector3D(x,y,z);
     }
@@ -57,6 +63,9 @@ public class Vector3D {
         return new Vector3D(this.x * scalar, this.y * scalar, this.z * scalar);
     }
 
+    public Vector3D sqrt() {
+        return new Vector3D(Math.sqrt(this.x), Math.sqrt(this.y), Math.sqrt(this.z));
+    }
     public Vector3D multiply(Vector3D vec) {
         return new Vector3D(this.x * vec.x, this.y * vec.y, this.z * vec.z);
     }
@@ -81,6 +90,10 @@ public class Vector3D {
 
     public static double dot(Vector3D a, Vector3D b) {
         return a.x * b.x + a.y * b.y + a.z * b.z;
+    }
+
+    public double dot (Vector3D other) {
+        return x * other.getX() + y * other.getY() + z * other.getZ();
     }
 
     public Vector3D cross(Vector3D other) {

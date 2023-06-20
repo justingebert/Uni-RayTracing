@@ -63,6 +63,7 @@ public class Renderer {
         double m = hitObject.material.getMetalness();
         double roughness = hitObject.material.getRoughness();
         double reflectivity = hitObject.material.getReflectivity();
+        double  transparency = hitObject.material.getTransparency();
         double ioR = hitObject.material.getIoR();
         Vector3D f0 = albedo.scale(m).add(one.scale(0.04).scale(1 - m));
 
@@ -83,6 +84,7 @@ public class Renderer {
         }
         //add reflectionColor
 
+        //
         if (intersection.getHitObject().getTransparency() > 0) {
             //ior
             double i, i1, i2;
@@ -127,14 +129,11 @@ public class Renderer {
             Ray refractionRay = new Ray(refractionRayOrigin, refractionVector);
 
 
-
-
-
             Intersect refractionIntersection = scene.RayData(refractionRay);
             if (refractionIntersection != null) {
                 col = calcColorAtHit(refractionIntersection, scene, refractionRay, bounces - 1);
             }else{
-                col = albedoG;
+                col = albedoG.scale((1 - reflectivity)).add(colorReflection.scale(reflectivity));;
             }
         } else {
             Fresnel = f0.add(one.subtract(f0).scale(Math.pow(1 - nv, 5)));

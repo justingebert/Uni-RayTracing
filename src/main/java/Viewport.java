@@ -1,3 +1,6 @@
+import Objects.Camera;
+import math.Vector3D;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -17,80 +20,39 @@ public class Viewport extends JFrame {
     private JDialog settingsDialog;
     private JLabel imageLabel;
     private JButton button1;
-    private JButton button2;
     private JSlider slider;
     private JComboBox<String> comboBox;
     private Scene scene;
     private int[] pixels;
+    static int resX;
+    static int resY;
 
+    static Camera camera = new Camera(
+            new Vector3D(0, 0, 1),
+            new Vector3D(0, 0, -1),
+            new Vector3D(0, 1, 0),
+            new Vector3D(1, 0, 0),
+            resX,
+            resY
+    );
 
-
-    public Viewport(Scene scene, int[] pixels, int resX, int resY) {
+    public Viewport(Scene scene, int resX, int resY) {
+        scene.setActiveCamera(camera);
         this.scene = scene;
-        this.pixels = pixels;
 
-        setTitle("Ray Tracer Viewport");
-        setLayout(new BorderLayout());
+        this.resX = resX;
+        this.resY = resY;
 
-        JPanel sidePanel = new JPanel();
-        sidePanel.setLayout(new BoxLayout(sidePanel, BoxLayout.Y_AXIS));
-        sidePanel.setPreferredSize(new Dimension(200, resY));
+        int[] pixels = Renderer.renderImage(scene, resY, resX);
 
-        button1 = new JButton("Button 1");
-        button2 = new JButton("Button 2");
-        slider = new JSlider();
-        comboBox = new JComboBox<>(new String[]{"Option 1", "Option 2", "Option 3"});
+        MemoryImageSource mis = new MemoryImageSource(resX, resY, new DirectColorModel(24, 0xff0000, 0xff00, 0xff), pixels, 0, resX);
+        Image image = Toolkit.getDefaultToolkit().createImage(mis);
 
-        sidePanel.add(button1);
-        sidePanel.add(button2);
-        sidePanel.add(slider);
-        sidePanel.add(comboBox);
+        this.frame = new JFrame();
+        frame.setTitle("Ray Tracer Viewport");
 
-        add(sidePanel, BorderLayout.EAST);
-
-        imageLabel = new JLabel();
-        add(imageLabel, BorderLayout.CENTER);
-
-        pack();
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        updateImage();
-
-        // Add listeners to the components
-        button1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Handle button1 click event
-                // Update scene or materials
-                updateImage();
-            }
-        });
-
-        button2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Handle button2 click event
-                // Update scene or materials
-                updateImage();
-            }
-        });
-
-        slider.addChangeListener(e -> {
-            // Handle slider value change event
-            // Update scene or materials
-            updateImage();
-        });
-
-        comboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Handle comboBox selection change event
-                // Update scene or materials
-                updateImage();
-            }
-        });
-
-        setVisible(true);
+        this.imageLabel = new JLabel(new ImageIcon(image));
+        frame.add(imageLabel, BorderLayout.CENTER);
     }
 
     private void updateImage(){
@@ -107,6 +69,13 @@ public class Viewport extends JFrame {
         System.out.println("Image saved.");
 
         Desktop.getDesktop().open(imgFile);
+    }
+
+    public void show() {
+        frame.pack();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        frame.setVisible(true);
     }
 
 

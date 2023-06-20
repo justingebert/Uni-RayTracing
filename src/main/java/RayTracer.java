@@ -33,38 +33,9 @@ public class RayTracer {
     public static void main(String[] args) {
         Scene scene = new Scene();
         scene.setActiveCamera(camera);
-        int []pixels = Renderer.renderImage(scene, resY, resX);
 
-        //RENDER ARRAY IN WINDOW
-        MemoryImageSource mis = new MemoryImageSource(resX, resY, new DirectColorModel(24, 0xff0000, 0xff00, 0xff), pixels, 0, resX);
-        Image image = Toolkit.getDefaultToolkit().createImage(mis);
+        int[] pixels = Renderer.renderImage(scene, resY, resX);
 
-        JFrame frame = new JFrame();
-        frame.setLayout(new BorderLayout());
-
-        JPanel sidePanel = new JPanel();
-        sidePanel.setLayout(new BoxLayout(sidePanel, BoxLayout.Y_AXIS));
-        sidePanel.setPreferredSize(new Dimension(200, resY)); // Adjust the width as needed
-
-        JButton button1 = new JButton("Button 1");
-        JButton button2 = new JButton("Button 2");
-        JSlider slider = new JSlider();
-        JComboBox<String> comboBox = new JComboBox<>(new String[]{"Option 1", "Option 2", "Option 3"});
-
-
-        sidePanel.add(button1);
-        sidePanel.add(button2);
-        sidePanel.add(slider);
-        sidePanel.add(comboBox);
-
-        frame.add(sidePanel, BorderLayout.EAST);
-
-        JLabel imageLabel = new JLabel(new ImageIcon(image));
-        frame.add(imageLabel, BorderLayout.CENTER);
-
-        frame.pack();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        frame.setVisible(true);
+        SwingUtilities.invokeLater(() -> new Viewport(scene, pixels, resX, resY));
     }
 }

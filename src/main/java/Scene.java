@@ -25,8 +25,8 @@ public class Scene {
 
     public Scene(){
 
-        Material greenMat = new Material(Color.GREEN,0,0.66,0,1);
-        Material blueMat = new Material(Color.BLUE,0,0.25,0.75,1);
+        Material greenMat = new Material(Color.GREEN,0,0.66,0,1.5);
+        Material blueMat = new Material(Color.WHITE,0,0.25,0.75,1.5);
         Material redMat = new Material(Color.RED,0,0.1,0,1.5);
         Material blackMat = new Material(Color.BLACK,0,0.1,0,1);
         Material cyanMat = new Material(Color.CYAN,0,0.2,0,1);
@@ -35,7 +35,7 @@ public class Scene {
        Sphere sphere1 = new Sphere(new Vector3D(-1, 0, -10), greenMat, 1.5);
        Sphere sphere2 = new Sphere(new Vector3D(2, -0, -12), redMat, 1);
        Sphere sphere3 = new Sphere(new Vector3D(2, -1, -8), blueMat, 1);
-       Sphere sphere4 = new Sphere(new Vector3D(-2.5, 1, -3), blueMat, .5);
+       Sphere sphere4 = new Sphere(new Vector3D(-1, 0, -3), blueMat, .5);
 
        Quadric q1 = new Quadric( 1, 1, 1, 0, 0, 0, 0, 0, 0,-1, new Vector3D(0, 0, -10), redMat);
        Matrix4x4 quadricTransformation = new Matrix4x4();

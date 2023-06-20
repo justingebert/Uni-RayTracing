@@ -42,7 +42,7 @@ public class Renderer {
         return pixels;
     }
 
-
+    //TODO move  reflect and refract method in ray class
     private static Vector3D calcColorAtHit(Intersect intersection, Scene scene, Ray ray, int bounces) {
         if(bounces <= 0) return new Vector3D(0, 0, 0);
 
@@ -76,7 +76,7 @@ public class Renderer {
         Vector3D colorReflection = new Vector3D(0, 0, 0);
         //TODO if reflectivvity != 0
         if (reflectionIntersection != null) {
-            colorReflection = calcColorAtHit(reflectionIntersection, scene, reflectionRay, bounces - 1);
+            colorReflection = calcColorAtHit(reflectionIntersection, scene, reflectionRay, bounces);
         } else {
             //colS = scene.getSkybox().getColor(reflectionRay);
             colorReflection = albedoG;
@@ -98,16 +98,19 @@ public class Renderer {
             Vector3D I = new Vector3D(i);
 
             //fresnel
+            //?? identisch warum?
             double w1 = rayDir.scale(-1).dot(normal);
             double w2 = rayDir.dot(normal.scale(-1));
 
-            double fS = (i1 * w1 - i2 * w2) / (i1 * w1 + i2 * w2);
-            double fP = (i2 * w1 - i1 * w2) / (i2 * w1 + i1 * w2);
-            double f = (fS + fP) / 2;
+            //?? F immer 0
+            //double fS = (i1  * w1 - i2 * w2)/ (i1 * w1 + i2 * w2);
+            //double fP = (i2 * w1 - i1 * w2) / (i2 * w1 + i1 * w2);
+            //double f = (fS + fP) / 2;
 
-            Fresnel = new Vector3D(f);
-
+            //Fresnel = one.subtract(new Vector3D(f));
+            Fresnel = f0.add(one.subtract(f0).scale(Math.pow(1 - nv, 5)));
             //refraction ray
+            //?? Gleiche wie w1 und w2
             double a = rayDir.scale(-1).dot(normal);
             Vector3D A = new Vector3D(a);
 
@@ -120,11 +123,16 @@ public class Renderer {
             Vector3D b = b1.sqrt();
             Vector3D refractionVector = rayDir.scale(i).add(normal.multiply(A.scale(i).subtract(b)));
             //Vector3D refractionVector = (rayDir.add(normal.scale(nv))).subtract(normal.scale(Math.sqrt(1 - ioR * ioR * (1 - nv * nv))).scale(ioR));
-            Vector3D refractionRayOrigin = hitPos;
+            Vector3D refractionRayOrigin = hitPos.add(refractionVector.scale(0.001F));
             Ray refractionRay = new Ray(refractionRayOrigin, refractionVector);
+
+
+
+
+
             Intersect refractionIntersection = scene.RayData(refractionRay);
             if (refractionIntersection != null) {
-                col = calcColorAtHit(intersection, scene, refractionRay, bounces - 1);
+                col = calcColorAtHit(refractionIntersection, scene, refractionRay, bounces - 1);
             }else{
                 col = albedoG;
             }

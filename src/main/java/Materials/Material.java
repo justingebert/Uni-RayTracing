@@ -70,5 +70,9 @@ public class Material {
     public Vector3D getAlbedo(){
         return new Vector3D(color.getRed(), color.getGreen(), color.getBlue()).scale(1.0/255.0);
     }
+
+    public Vector3D getAlbedoGamma(){
+        return new Vector3D(Math.pow(color.getRed(), 2.2), Math.pow(color.getGreen(), 2.2), Math.pow(color.getBlue(), 2.2)).scale(1.0/255.0);
+    }
     
 }

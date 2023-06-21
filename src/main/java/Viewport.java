@@ -18,11 +18,13 @@ public class Viewport extends JFrame {
     private JFrame frame;
     private JPanel sidePanel;
     private JDialog settingsDialog;
+
+    Image image;
     private JLabel imageLabel;
     private JButton button1;
     private JSlider slider;
     private JComboBox<String> comboBox;
-    private Scene scene;
+    //private Scene scene;
     private int[] pixels;
     static int resX;
     static int resY;
@@ -38,7 +40,7 @@ public class Viewport extends JFrame {
 
     public Viewport(Scene scene, int resX, int resY) {
         scene.setActiveCamera(camera);
-        this.scene = scene;
+        //this.scene = scene;
 
         this.resX = resX;
         this.resY = resY;
@@ -53,10 +55,16 @@ public class Viewport extends JFrame {
 
         this.imageLabel = new JLabel(new ImageIcon(image));
         frame.add(imageLabel, BorderLayout.CENTER);
+
     }
 
-    private void updateImage(){
-
+    public void updateImage(Scene scene) {
+        int[] pixels = Renderer.renderImage(scene, resY, resX);
+        MemoryImageSource mis = new MemoryImageSource(resX, resY, new DirectColorModel(24, 0xff0000, 0xff00, 0xff), pixels, 0, resX);
+        Image image = Toolkit.getDefaultToolkit().createImage(mis);
+        imageLabel.setIcon(new ImageIcon(image));
+        frame.repaint();
+        System.out.println("Image updated.");
     }
 
     public void renderToImage(int width, int height) throws IOException {

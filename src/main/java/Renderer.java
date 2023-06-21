@@ -68,11 +68,8 @@ public class Renderer {
         Vector3D f0 = albedo.scale(m).add(one.scale(0.04).scale(1 - m));
 
 
-        Vector3D reflectionVector = rayDir.subtract(normal.scale(2 * rayDir.dot(normal)));
-        Vector3D reflectionRayOrigin = hitPos.add(reflectionVector.scale(0.001F)); // Add a little to avoid hitting the same object again
-        Ray reflectionRay = new Ray(reflectionRayOrigin, reflectionVector);
+        Ray reflectionRay = ray.reflect(hitPos, normal);
         Intersect reflectionIntersection = scene.RayData(reflectionRay);
-
 
         Vector3D colorReflection = new Vector3D(0, 0, 0);
         //TODO if reflectivvity != 0
@@ -186,7 +183,7 @@ public class Renderer {
             if (shadowIntersection == null) {
                 //TODO separate function?
                 double D = Math.pow(r, 2) / (Math.pow(Math.PI * (Math.pow(nh, 2) * (Math.pow(r, 2) - 1) + 1), 2));
-                if(D >= 1) System.out.println("D: " + D);
+                //if(D >= 1) System.out.println("D: " + D);
                 double G = nv / ((nv * (1.0 - rHalf)) + rHalf) * nl / ((nl * (1.0 - rHalf)) + rHalf);
                 Vector3D specular = Fresnel.scale(D).scale(G);
                 Vector3D cookTorrance = specular.multiply(albedo.add(one.subtract(Fresnel)));

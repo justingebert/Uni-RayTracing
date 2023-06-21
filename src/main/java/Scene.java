@@ -15,6 +15,8 @@ public class Scene {
     ArrayList<Object3D> objects = new ArrayList<Object3D>();
     ArrayList<PointLight> lights = new ArrayList<PointLight>();
     Camera activeCamera;
+
+
     public Camera getActiveCamera() {
         return activeCamera;
     }
@@ -25,7 +27,7 @@ public class Scene {
 
     public Scene(){
 
-        Material greenMat = new Material(Color.GREEN,0,0.66,0,1.5);
+        Material greenMat = new Material(Color.CYAN,0,0.66,0,1.5);
         Material blueMat = new Material(Color.WHITE,0,0.25,0.75,1.5);
         Material redMat = new Material(Color.RED,0,0.1,0,1.5);
         Material blackMat = new Material(Color.BLACK,0,0.1,0,1);

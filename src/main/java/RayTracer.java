@@ -24,5 +24,9 @@ public class RayTracer {
         Viewport viewport = new Viewport(scene, resX, resY);
 
         viewport.show();
+
+        while (true) {
+            viewport.updateImage(sceneupdated);
+        }
     }
 }

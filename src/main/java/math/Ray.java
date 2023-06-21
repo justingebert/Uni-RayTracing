@@ -33,22 +33,30 @@ public class Ray {
         return new Ray(reflectedRayOrigin, reflectedDirection);
     }
 
-    public Ray refract(Vector3D normal, double ior) {
-        double cosi = Math.max(-1, Math.min(1, Vector3D.dot(direction, normal)));
-        double etai = 1, etat = ior;
-        Vector3D n = normal;
-        if (cosi < 0) {
-            cosi = -cosi;
+    public Ray refract(Vector3D hitPos, Vector3D normal, double ioR) {
+        double i, i1, i2;
+        if (direction.dot(normal) > 0) {
+            i1 = 1;
+            i2 = ioR;
+            i = 1.0 / ioR;
+
         } else {
-            double temp = etai;
-            etai = etat;
-            etat = temp;
-            n = n.scale(-1);
+            i = ioR;
+            normal = normal.scale(-1);
         }
-        double eta = etai / etat;
-        double k = 1 - eta * eta * (1 - cosi * cosi);
-        Vector3D refractedDirection = k < 0 ? new Vector3D(0, 0, 0) : direction.scale(eta).add(n.scale(eta * cosi - Math.sqrt(k)));
-        return new Ray(origin, refractedDirection);
+
+        //TODO problem with total internal reflection (i*i*(1-a*a) < 0)
+        double a = direction.scale(-1).dot(normal);
+        double b1 = 1-(i*i*(1-a*a));
+        if(b1 < 0) {
+            return reflect(hitPos, normal);
+        }
+        double b = Math.sqrt(b1);
+
+        Vector3D refractionVector = direction.scale(i).add(normal.scale((a*i)-b));
+        Vector3D refractionRayOrigin = hitPos.add(refractionVector.scale(0.001F));
+
+        return new Ray(refractionRayOrigin, refractionVector);
     }
 
     public Ray shadowRay(Vector3D hitPos, Vector3D lightPos) {

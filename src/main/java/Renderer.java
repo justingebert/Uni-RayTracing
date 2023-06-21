@@ -63,74 +63,40 @@ public class Renderer {
         double m = hitObject.material.getMetalness();
         double roughness = hitObject.material.getRoughness();
         double reflectivity = hitObject.material.getReflectivity();
-        double  transparency = hitObject.material.getTransparency();
+        double transparency = hitObject.material.getTransparency();
         double ioR = hitObject.material.getIoR();
         Vector3D f0 = albedo.scale(m).add(one.scale(0.04).scale(1 - m));
 
+        Vector3D colorReflection = new Vector3D(0, 0, 0);
 
         Ray reflectionRay = ray.reflect(hitPos, normal);
         Intersect reflectionIntersection = scene.RayData(reflectionRay);
-
-        Vector3D colorReflection = new Vector3D(0, 0, 0);
         //TODO if reflectivvity != 0
         if (reflectionIntersection != null) {
-            colorReflection = calcColorAtHit(reflectionIntersection, scene, reflectionRay, bounces);
+            colorReflection = calcColorAtHit(reflectionIntersection, scene, reflectionRay, bounces-1);
         } else {
             //colS = scene.getSkybox().getColor(reflectionRay);
             colorReflection = albedoG;
+            //?correct???
         }
-        //add reflectionColor
 
-        //
         if (intersection.getHitObject().getTransparency() > 0) {
-            //ior
-            double i, i1, i2;
-            if (rayDir.scale(-1).dot(normal) < 0) {
-                i1 = 1;
-                i2 = ioR;
-                i = 1 / ioR;
-            } else {
-                i1 = ioR;
-                i2 = 1;
-                i = ioR;
-            }
-            Vector3D I = new Vector3D(i);
 
             //fresnel
-            //?? identisch warum?
-            double w1 = rayDir.scale(-1).dot(normal);
-            double w2 = rayDir.dot(normal.scale(-1));
+            /*double w1 = rayDir.scale(-1).dot(normal);
+            double w2 = rayDir.dot(normal);
+            double fS = (i1  * w1 - i2 * w2)/ (i1 * w1 + i2 * w2);
+            double fP = (i2 * w1 - i1 * w2) / (i2 * w1 + i1 * w2);
+            double f = (fS + fP) / 2;
+            Fresnel = one.subtract(new Vector3D(f));*/
 
-            //?? F immer 0
-            //double fS = (i1  * w1 - i2 * w2)/ (i1 * w1 + i2 * w2);
-            //double fP = (i2 * w1 - i1 * w2) / (i2 * w1 + i1 * w2);
-            //double f = (fS + fP) / 2;
-
-            //Fresnel = one.subtract(new Vector3D(f));
             Fresnel = f0.add(one.subtract(f0).scale(Math.pow(1 - nv, 5)));
-            //refraction ray
-            //?? Gleiche wie w1 und w2
-            double a = rayDir.scale(-1).dot(normal);
-            Vector3D A = new Vector3D(a);
-
-            Vector3D b1 = one.subtract(I.multiply(I).multiply(one.subtract(A.multiply(A))));
-            if (b1.getX() < 0) {
-                b1.setX(0);
-                b1.setY(0);
-                b1.setZ(0);
-            }
-            Vector3D b = b1.sqrt();
-            Vector3D refractionVector = rayDir.scale(i).add(normal.multiply(A.scale(i).subtract(b)));
-            //Vector3D refractionVector = (rayDir.add(normal.scale(nv))).subtract(normal.scale(Math.sqrt(1 - ioR * ioR * (1 - nv * nv))).scale(ioR));
-            Vector3D refractionRayOrigin = hitPos.add(refractionVector.scale(0.001F));
-            Ray refractionRay = new Ray(refractionRayOrigin, refractionVector);
-
-
+            Ray refractionRay = ray.refract(hitPos, normal, ioR);
             Intersect refractionIntersection = scene.RayData(refractionRay);
             if (refractionIntersection != null) {
                 col = calcColorAtHit(refractionIntersection, scene, refractionRay, bounces - 1);
             }else{
-                col = albedoG.scale((1 - reflectivity)).add(colorReflection.scale(reflectivity));;
+                col = albedoG.scale((1 - transparency)).add(colorReflection.scale(transparency));
             }
         } else {
             Fresnel = f0.add(one.subtract(f0).scale(Math.pow(1 - nv, 5)));
@@ -149,7 +115,7 @@ public class Renderer {
     }
 
     //TODO nv doubled??
-    private static Vector3D calcLight(Scene scene, Ray ray, Intersect intersection, Vector3D Fresnel, Vector3D colorReflection, double r, Vector3D albedo) {
+    private static Vector3D calcLight(Scene scene, Ray ray, Intersect intersection, Vector3D Fresnel, Vector3D colorReflection, double r, Vector3D col) {
         ArrayList<PointLight> lights = scene.getLights();
 
         Vector3D colorAtHit = new Vector3D(0);
@@ -180,22 +146,25 @@ public class Renderer {
             Vector3D shadowRayOrigin = intersection.getPosition().add(lightVector.scale(-0.001F));
             Ray shadowRay = new Ray(shadowRayOrigin, lightVector.scale(-1));
             Intersect shadowIntersection = scene.RayData(shadowRay);
-            if (shadowIntersection == null) {
-                //TODO separate function?
-                double D = Math.pow(r, 2) / (Math.pow(Math.PI * (Math.pow(nh, 2) * (Math.pow(r, 2) - 1) + 1), 2));
-                //if(D >= 1) System.out.println("D: " + D);
-                double G = nv / ((nv * (1.0 - rHalf)) + rHalf) * nl / ((nl * (1.0 - rHalf)) + rHalf);
-                Vector3D specular = Fresnel.scale(D).scale(G);
-                Vector3D cookTorrance = specular.multiply(albedo.add(one.subtract(Fresnel)));
 
-                Vector3D color = colorAtHit.add(lightColor.scale(lightIntensity).scale(nl).multiply(cookTorrance));
-                colorAtHit = new Vector3D(color.getX(), color.getY(), color.getZ());
+            double D = r2 / (Math.pow(Math.PI * (Math.pow(nh, 2) * (r2 - 1) + 1), 2));
+            double G = nv / ((nv * (1.0 - rHalf)) + rHalf) * nl / ((nl * (1.0 - rHalf)) + rHalf);
+            Vector3D specular = Fresnel.scale(D).scale(G);
+            Vector3D cookTorrance = specular.add(col.multiply(one.subtract(Fresnel)));
+
+            Vector3D color = colorAtHit.add(lightColor.scale(lightIntensity).scale(nl).multiply(cookTorrance));
+            if (shadowIntersection == null) {
+                colorAtHit = colorAtHit.add(color);
             } else {
-                colorAtHit = colorAtHit.scale(GLOBAL_ILLUMINATION);
+                colorAtHit = colorAtHit.add(color.scale(0.03));
             }
         }
 
         return colorAtHit;
+    }
+
+    private static Vector3D cookTorrance(){
+        return null;
     }
 
 }

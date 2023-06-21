@@ -19,14 +19,12 @@ public class RayTracer {
     static double gamma = 2.2;
 
     public static void main(String[] args) {
-        Scene scene = new Scene();
-
-        Viewport viewport = new Viewport(scene, resX, resY);
+        Viewport viewport = new Viewport(resX, resY);
 
         viewport.show();
 
         while (true) {
-            viewport.updateImage(sceneupdated);
+            viewport.updateImage();
         }
     }
 }

@@ -122,7 +122,7 @@ public class Quadric extends Object3D{
        this.h = transformedQuadric2.matrix[1][3];
        this.i = transformedQuadric2.matrix[2][3];
        this.j = transformedQuadric2.matrix[3][3];
-       print();
+       //print();
     }
 
     @Override

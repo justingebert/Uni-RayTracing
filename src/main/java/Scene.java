@@ -25,11 +25,12 @@ public class Scene {
     }
 
 
-    public Scene(){
+    public Scene(double roughness){
 
-        Material greenMat = new Material(Color.CYAN,0,0.66,0,1.5);
-        Material blueMat = new Material(Color.WHITE,0,0.25,0.75,1.5);
-        Material redMat = new Material(Color.RED,0,0.1,0,1.5);
+        System.out.println(roughness);
+        Material greenMat = new Material(Color.GREEN,0,roughness,0,1);
+        Material blueMat = new Material(Color.WHITE,0,0.25,0.75,1.8);
+        Material redMat = new Material(Color.RED,0,0.1,0,1);
         Material blackMat = new Material(Color.BLACK,0,0.1,0,1);
         Material cyanMat = new Material(Color.CYAN,0,0.2,0,1);
 
@@ -56,11 +57,11 @@ public class Scene {
         objects.add(sphere4);
 
         //objects.add(q1);
-        lights.add(new PointLight(new Vector3D(-10, -9, 10), Color.WHITE, 10));
+        lights.add(new PointLight(new Vector3D(-10, -9, 10), Color.WHITE, .4));
         //lights.add(new PointLight(new Vector3D(20, 5, 0), Color.WHITE, 10));
-        lights.add(new PointLight(new Vector3D(50, 10, 3), Color.WHITE, 10));
+        lights.add(new PointLight(new Vector3D(50, 10, 3), Color.WHITE, .3));
 
-        lights.add(new PointLight(new Vector3D(-20, 50, 3), Color.WHITE, 10));
+        lights.add(new PointLight(new Vector3D(-20, 50, 3), Color.WHITE, .2));
     }
 
     public void addObject(Object3D object) {
@@ -76,7 +77,7 @@ public class Scene {
 
     public static Scene getScene(){
         if(scene == null){
-            scene = new Scene();
+            scene = new Scene(0.5);
         }
         return scene;
     }
@@ -86,7 +87,7 @@ public class Scene {
         for(Object3D object : this.objects) {
             Vector3D intersection = object.calculateIntersection(ray);
             //if intersection is closer than the last one -> new nearestIntersection
-            if (intersection != null && (nearestIntersection == null || Vector3D.distance(nearestIntersection.getPosition(), ray.getOrigin()) > Vector3D.distance(intersection, ray.getOrigin()))) {
+            if (intersection != null && (nearestIntersection == null || Vector3D.distance(nearestIntersection.getPosition(), ray.getOrigin()) > Vector3D.distance(intersection, ray.getOrigin()) && Vector3D.distance(intersection, ray.getOrigin()) < 0 )) {
                 nearestIntersection = new Intersect(ray, object, intersection);
             }
         }

@@ -3,6 +3,8 @@ import math.Vector3D;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,7 +26,7 @@ public class Viewport extends JFrame {
     private JButton button1;
     private JSlider slider;
     private JComboBox<String> comboBox;
-    //private Scene scene;
+    private Scene scene;
     private int[] pixels;
     static int resX;
     static int resY;
@@ -38,9 +40,9 @@ public class Viewport extends JFrame {
             resY
     );
 
-    public Viewport(Scene scene, int resX, int resY) {
+    public Viewport(int resX, int resY) {
+        scene = new Scene(0.5);
         scene.setActiveCamera(camera);
-        //this.scene = scene;
 
         this.resX = resX;
         this.resY = resY;
@@ -53,16 +55,58 @@ public class Viewport extends JFrame {
         this.frame = new JFrame();
         frame.setTitle("Ray Tracer Viewport");
 
+        JPanel sidePanel = new JPanel();
+        sidePanel.setLayout(new BoxLayout(sidePanel, BoxLayout.Y_AXIS));
+        sidePanel.setPreferredSize(new Dimension(200, resY));
+
+        JLabel roughnessLabel = new JLabel("Roughness");
+        JSlider roughnessSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+        roughnessSlider.setMajorTickSpacing(10);
+
+        JLabel lightIntensityLabel = new JLabel("lightIntensity");
+        JSlider lightIntensitySlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+        lightIntensitySlider.setMajorTickSpacing(10);
+
+        roughnessSlider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                double roughnessValue = (double) roughnessSlider.getValue() / 100.0;
+                // Update the roughness value in the material
+                //updateRoughness(roughnessValue);
+                scene = new Scene(roughnessValue);
+                scene.setActiveCamera(camera);
+            }
+        });
+
+        lightIntensitySlider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                double lightIntensitySliderValue = (double) lightIntensitySlider.getValue() / 100.0;
+                // Update the roughness value in the material
+                //updateRoughness(roughnessValue);
+                //scene = new Scene(roughnessValue);
+                scene.setActiveCamera(camera);
+            }
+        });
+
+
+        sidePanel.add(roughnessLabel);
+        sidePanel.add(roughnessSlider);
+
+        sidePanel.add(lightIntensityLabel);
+        sidePanel.add(lightIntensitySlider);
+
+
         this.imageLabel = new JLabel(new ImageIcon(image));
         frame.add(imageLabel, BorderLayout.CENTER);
+        frame.add(sidePanel, BorderLayout.EAST);
 
     }
 
-    public void updateImage(Scene scene) {
+    public void updateImage() {
         int[] pixels = Renderer.renderImage(scene, resY, resX);
         MemoryImageSource mis = new MemoryImageSource(resX, resY, new DirectColorModel(24, 0xff0000, 0xff00, 0xff), pixels, 0, resX);
         Image image = Toolkit.getDefaultToolkit().createImage(mis);
         imageLabel.setIcon(new ImageIcon(image));
+        frame.add(imageLabel, BorderLayout.CENTER);
         frame.repaint();
         System.out.println("Image updated.");
     }
@@ -85,42 +129,5 @@ public class Viewport extends JFrame {
 
         frame.setVisible(true);
     }
-
-
-    /*public void before() {
-        int []pixels = Renderer.renderImage(scene, resY, resX);
-
-        //RENDER ARRAY IN WINDOW
-        MemoryImageSource mis = new MemoryImageSource(resX, resY, new DirectColorModel(24, 0xff0000, 0xff00, 0xff), pixels, 0, resX);
-        Image image = Toolkit.getDefaultToolkit().createImage(mis);
-
-        JFrame frame = new JFrame();
-        frame.setLayout(new BorderLayout());
-
-        JPanel sidePanel = new JPanel();
-        sidePanel.setLayout(new BoxLayout(sidePanel, BoxLayout.Y_AXIS));
-        sidePanel.setPreferredSize(new Dimension(200, resY)); // Adjust the width as needed
-
-        JButton button1 = new JButton("Button 1");
-        JButton button2 = new JButton("Button 2");
-        JSlider slider = new JSlider();
-        JComboBox<String> comboBox = new JComboBox<>(new String[]{"Option 1", "Option 2", "Option 3"});
-
-
-        sidePanel.add(button1);
-        sidePanel.add(button2);
-        sidePanel.add(slider);
-        sidePanel.add(comboBox);
-
-        frame.add(sidePanel, BorderLayout.EAST);
-
-        JLabel imageLabel = new JLabel(new ImageIcon(image));
-        frame.add(imageLabel, BorderLayout.CENTER);
-
-        frame.pack();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        frame.setVisible(true);
-    }*/
 
 }

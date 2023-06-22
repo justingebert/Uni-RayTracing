@@ -35,7 +35,7 @@ public class Ray {
 
     public Ray refract(Vector3D hitPos, Vector3D normal, double ioR) {
         double i, i1, i2;
-        if (direction.dot(normal) > 0) {
+        if (direction.dot(normal) < 0) {
             i1 = 1;
             i2 = ioR;
             i = 1.0 / ioR;

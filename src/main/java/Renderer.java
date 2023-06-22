@@ -53,7 +53,7 @@ public class Renderer {
 
         double nv = Math.max(Vector3D.dot(normal, V), 0);
 
-        Vector3D col;
+        Vector3D col = new Vector3D(0, 0, 0);
         Vector3D Fresnel = new Vector3D(1, 1, 1);
         Vector3D one = new Vector3D(1.0, 1.0, 1.0);
 
@@ -94,9 +94,9 @@ public class Renderer {
             Ray refractionRay = ray.refract(hitPos, normal, ioR);
             Intersect refractionIntersection = scene.RayData(refractionRay);
             if (refractionIntersection != null) {
-                col = calcColorAtHit(refractionIntersection, scene, refractionRay, bounces - 1);
+                col = col.add(calcColorAtHit(refractionIntersection, scene, refractionRay, bounces - 1)).scale(0.2);
             }else{
-                col = albedoG.scale((1 - transparency)).add(colorReflection.scale(transparency));
+                col = albedoG.scale((1 - transparency)).add(colorReflection.scale(transparency)).scale(0.01);
             }
         } else {
             Fresnel = f0.add(one.subtract(f0).scale(Math.pow(1 - nv, 5)));

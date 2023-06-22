@@ -30,6 +30,10 @@ public class Viewport extends JFrame {
     private int[] pixels;
     static int resX;
     static int resY;
+    private double roughness = 0.5;
+    private double lightIntensity = 1.0;
+
+    private double ioR = 1.5;
 
     static Camera camera = new Camera(
             new Vector3D(0, 0, 1),
@@ -41,7 +45,7 @@ public class Viewport extends JFrame {
     );
 
     public Viewport(int resX, int resY) {
-        scene = new Scene(0.5);
+        scene = new Scene(0.5,1.0,1.5);
         scene.setActiveCamera(camera);
 
         this.resX = resX;
@@ -64,25 +68,40 @@ public class Viewport extends JFrame {
         roughnessSlider.setMajorTickSpacing(10);
 
         JLabel lightIntensityLabel = new JLabel("lightIntensity");
-        JSlider lightIntensitySlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+        JSlider lightIntensitySlider = new JSlider(JSlider.HORIZONTAL, 0, 200, 100);
         lightIntensitySlider.setMajorTickSpacing(10);
+
+
+        JLabel ioRLabel = new JLabel("ioR");
+        JSlider ioRSlider = new JSlider(JSlider.HORIZONTAL, 0, 300, 100);
+        ioRSlider.setMajorTickSpacing(10);
 
         roughnessSlider.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                double roughnessValue = (double) roughnessSlider.getValue() / 100.0;
+                roughness = (double) roughnessSlider.getValue() / 100.0;
                 // Update the roughness value in the material
                 //updateRoughness(roughnessValue);
-                scene = new Scene(roughnessValue);
+                scene = new Scene(roughness, lightIntensity, ioR);
                 scene.setActiveCamera(camera);
             }
         });
 
         lightIntensitySlider.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                double lightIntensitySliderValue = (double) lightIntensitySlider.getValue() / 100.0;
+                lightIntensity = (double) lightIntensitySlider.getValue() / 100.0;
                 // Update the roughness value in the material
                 //updateRoughness(roughnessValue);
-                //scene = new Scene(roughnessValue);
+                scene = new Scene(roughness, lightIntensity, ioR);
+                scene.setActiveCamera(camera);
+            }
+        });
+
+        ioRSlider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                ioR = (double) ioRSlider.getValue() / 100.0;
+                // Update the roughness value in the material
+                //updateRoughness(roughnessValue);
+                scene = new Scene(roughness, lightIntensity, ioR);
                 scene.setActiveCamera(camera);
             }
         });
@@ -93,6 +112,9 @@ public class Viewport extends JFrame {
 
         sidePanel.add(lightIntensityLabel);
         sidePanel.add(lightIntensitySlider);
+
+        sidePanel.add(ioRLabel);
+        sidePanel.add(ioRSlider);
 
 
         this.imageLabel = new JLabel(new ImageIcon(image));

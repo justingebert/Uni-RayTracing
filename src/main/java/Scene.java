@@ -15,8 +15,6 @@ public class Scene {
     ArrayList<Object3D> objects = new ArrayList<Object3D>();
     ArrayList<PointLight> lights = new ArrayList<PointLight>();
     Camera activeCamera;
-
-
     public Camera getActiveCamera() {
         return activeCamera;
     }
@@ -28,8 +26,8 @@ public class Scene {
     public Scene(double roughness, double lightIntensity, double ioR){
 
         System.out.println(roughness);
-        Material greenMat = new Material(Color.GREEN,0,roughness,0,1);
-        Material blueMat = new Material(Color.BLUE,0,roughness,0.75,ioR);
+        Material greenMat = new Material(Color.GREEN    ,0,roughness,0,1);
+        Material blueMat = new Material(Color.WHITE,0,roughness,0.75,ioR);
         Material redMat = new Material(Color.RED,0,0.1,0,1);
         Material blackMat = new Material(Color.BLACK,0,0.1,0,1);
         Material cyanMat = new Material(Color.CYAN,0,0.2,0,1);

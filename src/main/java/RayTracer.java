@@ -12,8 +12,6 @@ import java.awt.image.MemoryImageSource;
 import javax.swing.*;
 
 public class RayTracer {
-
-
     static int resX = 1920;
     static int resY = 1080;
     static double gamma = 2.2;

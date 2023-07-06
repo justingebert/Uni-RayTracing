@@ -2,6 +2,8 @@ package math;
 
 import math.Vector3D;
 
+import java.util.ArrayList;
+
 public class Ray {
     private Vector3D origin;
     private Vector3D direction;
@@ -45,7 +47,6 @@ public class Ray {
             normal = normal.scale(-1);
         }
 
-        //TODO problem with total internal reflection (i*i*(1-a*a) < 0)
         double a = direction.scale(-1).dot(normal);
         double b1 = 1-(i*i*(1-a*a));
         if(b1 < 0) {
@@ -64,4 +65,5 @@ public class Ray {
         Vector3D shadowRayOrigin = hitPos.add(shadowRayDirection.scale(0.001F)); // Add a little to avoid hitting the same object again
         return new Ray(shadowRayOrigin, shadowRayDirection);
     }
+
 }

@@ -9,7 +9,7 @@ public class SpotLight {
     Vector3D position;
     public Color color;
     public double intensity;
-    public double openAngle;
+    public double size = 45; //degrees
 
     public SpotLight(Vector3D position, Color color, double intensity) {
         this.position = position;

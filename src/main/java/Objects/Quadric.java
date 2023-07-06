@@ -58,13 +58,6 @@ public class Quadric extends Object3D{
         double i = this.i;
         double j = this.j;
 
-
-        //double A = a * dx2 + b * dy2 + c * dz2 + 2*d * dx * dy + 2*e * dx * dz + 2*f * dy * dz;
-        //TODO klammern angucken
-        //double B = 2 * (a * ox * dx + b * oy * dy + c * oz * dz + d * (ox * dy + oy * dx) + e * (ox * dz + oz * dx) + f * (oy * dz + oz * dy) + g * dx + h * dy + i * dz);
-        //double B = 2 * (a * ox * dx + b * oy * dy + c * oz * dz + d * ox * dy + d * oy * dx + e * ox * dz + e* oz * dx + f * oy * dz + f* oz * dy + g * dx + h * dy + i * dz);
-        //double C = a * ox2 + b * oy2 + c * oz2 + 2*(d * ox * oy + e * ox * oz + f * oy * oz + g * ox + h * oy + i * oz) + j;
-
         double A = a*dx2 + b*dy2 + c*dz2 + 2*(d*dx*dy + e*dx*dz + f*dy*dz);
         double B = 2*(a*ox*dx + b*oy*dy + c*oz*dz + d * (ox*dy + oy*dx) + e * (ox*dz + oz*dx) + f*(oy*dz + oz+dy) + g*dx + h*dy + i*dz);
         double C = a*ox2 + b*oy2 + c*oz2 + 2*(d*ox*oy + e*ox*oz + f*oy*oz + g*ox + h*oy + i*oz) + j;
@@ -72,7 +65,6 @@ public class Quadric extends Object3D{
         // Calculate the discriminant of the quadratic equation
         double discriminant = B * B - (4 * A * C);
 
-        //TODO a can't be zero
         if (discriminant < 0) {
             // No intersection
             return null;
@@ -90,7 +82,6 @@ public class Quadric extends Object3D{
             return ray.getOrigin().add(ray.getDirection().scale(t));
         }
     }
-    //TODO transforming still a bit buggy tranlation also sclaes the quadric
     @Override
     public void applyTransformation(Matrix4x4 transformationMatrix) {
        Matrix4x4 transposed = transformationMatrix.transpose();

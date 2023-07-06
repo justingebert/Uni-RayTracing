@@ -1,6 +1,8 @@
 package Lights;
 
+import Materials.Material;
 import Objects.Object3D;
+import Objects.Sphere;
 import math.Ray;
 import math.Util;
 import math.Vector3D;
@@ -17,14 +19,17 @@ public class PointLight {
     Vector3D position;
     public Color color;
 
+    public double size;
 
-
+    public Object3D sphere;
     public double intensity;
 
-    public PointLight(Vector3D position, Color color, double intensity){
+    public PointLight(Vector3D position, Color color, double intensity, double size){
         this.position = position;
         this.color = color;
         this.intensity = intensity;
+        this.size = size;
+        this.sphere = new Sphere(position, new Material(color, 0, 0, 0, 0), size);
     }
     public Vector3D getPosition(){
         return position;

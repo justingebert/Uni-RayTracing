@@ -4,7 +4,6 @@ import math.Intersect;
 import math.Ray;
 import math.Vector3D;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 import static math.Util.clamp;
@@ -13,38 +12,78 @@ public class Renderer {
     private static final float GLOBAL_ILLUMINATION = 0.0003F;
     private static final int MAX_REFLECTION_BOUNCES = 5;
     private static final boolean SHOW_SKYBOX = true;
+    private static boolean INDIRECT_LIGHTING = true;
 
     public static int[] renderImage(Scene scene, int resY, int resX) {
         int[] pixels = new int[resX * resY];
         for (int y = 0; y < resY; ++y) {
             for (int x = 0; x < resX; ++x) {
 
+                //TODO first intersection should not be here
                 Ray ray = scene.getActiveCamera().eyeToImage(x, y, resX, resY);
-                Intersect intersection = scene.RayData(ray);
-                if (intersection != null) {
-                    Vector3D color = calcColorAtHit(intersection, scene, ray, MAX_REFLECTION_BOUNCES);
 
-                    //gamma correction
-                    double r = Math.pow(clamp(color.getX(), 0, 1), 0.45) * 255;
-                    double g = Math.pow(clamp(color.getY(), 0, 1), 0.45) * 255;
-                    double b = Math.pow(clamp(color.getZ(), 0, 1), 0.45) * 255;
+                Vector3D color = calcColorAtHit(scene, ray, MAX_REFLECTION_BOUNCES);
 
-                    int RGB = (0xFF << 24) | ((int) r << 16) | ((int) g << 8) | (int) b;
-                    pixels[y * resX + x] = RGB;
-                } else if (SHOW_SKYBOX) {
-                    //TODO skybox
-                    pixels[y * resX + x] = Color.BLACK.getRGB();
-                } else {
-                    pixels[y * resX + x] = Color.BLACK.getRGB();
-                }
+                //gamma correction
+                double r = Math.pow(clamp(color.getX(), 0, 1), 0.45) * 255;
+                double g = Math.pow(clamp(color.getY(), 0, 1), 0.45) * 255;
+                double b = Math.pow(clamp(color.getZ(), 0, 1), 0.45) * 255;
+
+                int RGB = (0xFF << 24) | ((int) r << 16) | ((int) g << 8) | (int) b;
+                pixels[y * resX + x] = RGB;
+
+                //TODO put smybox logic into calcColor
+//                Intersect intersection = scene.RayData(ray);
+//                if (intersection != null) {
+//                    Vector3D color = calcColorAtHit(scene, ray, MAX_REFLECTION_BOUNCES);
+//
+//                    //gamma correction
+//                    double r = Math.pow(clamp(color.getX(), 0, 1), 0.45) * 255;
+//                    double g = Math.pow(clamp(color.getY(), 0, 1), 0.45) * 255;
+//                    double b = Math.pow(clamp(color.getZ(), 0, 1), 0.45) * 255;
+//
+//                    int RGB = (0xFF << 24) | ((int) r << 16) | ((int) g << 8) | (int) b;
+//                    pixels[y * resX + x] = RGB;
+//                } else if (SHOW_SKYBOX) {
+//                    //TODO skybox
+//                    pixels[y * resX + x] = Color.BLACK.getRGB();
+//                } else {
+//                    pixels[y * resX + x] = Color.BLACK.getRGB();
+//                }
             }
         }
         return pixels;
     }
 
-    //TODO move  reflect and refract method in ray class
-    private static Vector3D calcColorAtHit(Intersect intersection, Scene scene, Ray ray, int bounces) {
+    //TODO Generate random rays
+    private static Vector3D pathTraceDiffLight(Scene scene,Intersect intersection, Ray ray, int bounces, int numRays) {
         if(bounces <= 0) return new Vector3D(0, 0, 0);
+
+        Vector3D lightIntensity = new Vector3D(0);
+        for (int i = 0; i < numRays; i++) {
+            Ray randomRay = intersection.generateRandomRay();
+            Intersect randomIntersection = scene.RayData(randomRay);
+            if (randomIntersection != null) {
+                double rn = randomRay.getDirection().dot(intersection.getNormal());
+                lightIntensity = lightIntensity.add(randomIntersection.getMaterial().getAlbedo().scale(rn));
+            }
+        }
+        lightIntensity = lightIntensity.scale(1.0 / numRays);
+        lightIntensity = lightIntensity.add(calcDirectLight(intersection, scene, ray));
+
+        Ray reflectedRay = ray.reflect(intersection.getPosition(), intersection.getNormal());
+
+        Vector3D indirectLight = pathTraceDiffLight(scene, reflectedRay, bounces - 1, numRays);
+        color.add(indirectLight.scale(GLOBAL_ILLUMINATION));
+
+        return color;
+
+    }
+
+    private static Vector3D calcColorAtHit(Scene scene, Ray ray, int bounces) {
+        if(bounces <= 0) return new Vector3D(0, 0, 0);
+
+        Intersect intersection = scene.RayData(ray);
 
         Vector3D hitPos = intersection.getPosition();
         Vector3D rayDir = ray.getDirection();
@@ -69,11 +108,12 @@ public class Renderer {
 
         Vector3D colorReflection = new Vector3D(0, 0, 0);
 
+        //TODO first intersection also in here
         Ray reflectionRay = ray.reflect(hitPos, normal);
         Intersect reflectionIntersection = scene.RayData(reflectionRay);
         //TODO if reflectivvity != 0
         if (reflectionIntersection != null) {
-            colorReflection = calcColorAtHit(reflectionIntersection, scene, reflectionRay, bounces-1);
+            colorReflection = calcColorAtHit(scene, reflectionRay, bounces-1);
         } else {
             //colS = scene.getSkybox().getColor(reflectionRay);
             colorReflection = albedoG;
@@ -94,7 +134,7 @@ public class Renderer {
             Ray refractionRay = ray.refract(hitPos, normal, ioR);
             Intersect refractionIntersection = scene.RayData(refractionRay);
             if (refractionIntersection != null) {
-                col = col.add(calcColorAtHit(refractionIntersection, scene, refractionRay, bounces - 1)).scale(0.2);
+                col = col.add(calcColorAtHit(scene, refractionRay, bounces - 1)).scale(0.2);
             }else{
                 col = albedoG.scale((1 - transparency)).add(colorReflection.scale(transparency)).scale(0.01);
             }
@@ -102,7 +142,16 @@ public class Renderer {
             Fresnel = f0.add(one.subtract(f0).scale(Math.pow(1 - nv, 5)));
             col = albedoG.scale((1 - reflectivity)).add(colorReflection.scale(reflectivity));
         }
+
+//        else if(SHOW_SKYBOX){
+//            //return scene.getSkybox().getColor(ray);
+//            return new Vector3D(0, 0, 0);
+//        }else{
+//            return new Vector3D(0, 0, 0);
+//        }
+
         //TODO pass material to calcLight instead of so many vars
+        //reflected color should not go thorugh cook torance again (calcLight)
         return calcLight(scene, ray, intersection, Fresnel, colorReflection, roughness, col);
     }
 
@@ -112,6 +161,53 @@ public class Renderer {
 
     private static Vector3D calcDiffuse(Vector3D albedo, Vector3D colS, double roughness, Vector3D col) {
         return null;
+    }
+
+    private static Vector3D calcDirectLight(Intersect intersection, Scene scene, Ray ray) {
+        ArrayList<PointLight> lights = scene.getLights();
+
+        Vector3D colorAtHit = new Vector3D(0);
+        Vector3D V = ray.getDirection().scale(-1).normalize();
+        Vector3D one = new Vector3D(1.0);
+        double r = intersection.getHitObject().getRoughness();
+
+
+        for (PointLight light : lights) {
+            Vector3D lightColor = light.getClampedColor();
+            double lightIntensity = light.getIntensity();
+
+            Vector3D lightDir = light.getPosition().subtract(intersection.getPosition()).normalize();
+            Vector3D lightVector = lightDir.scale(-1);
+
+            Vector3D H = V.add(lightDir).scale(0.5).normalize();
+
+            double nr = Math.max(Vector3D.dot(intersection.getNormal(), lightVector), 0);
+            double nh = Vector3D.dot(intersection.getNormal(), H);
+            double nl = Math.max(Vector3D.dot(intersection.getNormal(), lightDir), 0);
+            double nv = Math.max(Vector3D.dot(intersection.getNormal(), V), 0);
+
+            double r2 = Math.pow(r, 2);
+            double rHalf = r / 2;
+
+            //Ergebnis += FarbeQ* IntensitätQ* N·R * F * ColS
+            colorAtHit.add(lightColor.scale(lightIntensity).scale(nr).multiply(Fresnel).multiply(colorReflection));
+
+            //*shadow
+            Vector3D shadowRayOrigin = intersection.getPosition().add(lightVector.scale(-0.001F));
+            Ray shadowRay = new Ray(shadowRayOrigin, lightVector.scale(-1));
+            Intersect shadowIntersection = scene.RayData(shadowRay);
+
+            double D = r2 / (Math.pow(Math.PI * (Math.pow(nh, 2) * (r2 - 1) + 1), 2));
+            double G = nv / ((nv * (1.0 - rHalf)) + rHalf) * nl / ((nl * (1.0 - rHalf)) + rHalf);
+            Vector3D specular = Fresnel.scale(D).scale(G);
+            Vector3D cookTorrance = specular.add(col.multiply(one.subtract(Fresnel)));
+
+            Vector3D color = colorAtHit.add(lightColor.scale(lightIntensity).scale(nl).multiply(cookTorrance));
+            if (shadowIntersection == null) {
+                colorAtHit = colorAtHit.add(color);
+            } else {
+                colorAtHit = colorAtHit.add(color.scale(0.03));
+            }
     }
 
     //TODO nv doubled??

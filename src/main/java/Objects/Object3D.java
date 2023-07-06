@@ -22,9 +22,6 @@ public abstract class Object3D {
         return new Vector3D(this.getColor().getRed(), this.getColor().getGreen(), this.getColor().getBlue());
     }
 
-    //TODO change to implement ray class
-    //public abstract double calculateIntersection(Vector3D origin, Vector3D direction);
-
     public abstract Vector3D calculateIntersection(Ray ray);
 
     public abstract void applyTransformation(Matrix4x4 transformationMatrix);

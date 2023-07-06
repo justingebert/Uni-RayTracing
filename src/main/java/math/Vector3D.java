@@ -19,6 +19,13 @@ public class Vector3D {
         this.y = x;
         this.z = x;
     }
+    //generated
+    public static Vector3D randomUnitVector() {
+        double a = Math.random() * 2 * Math.PI;
+        double z = Math.random() * 2 - 1;
+        double r = Math.sqrt(1 - z * z);
+        return new Vector3D(r * Math.cos(a), r * Math.sin(a), z);
+    }
 
     public Vector3D getValues(){
         return new Vector3D(x,y,z);

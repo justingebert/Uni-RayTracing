@@ -20,7 +20,6 @@ public class Viewport extends JFrame {
     private JFrame frame;
     private JPanel sidePanel;
     private JDialog settingsDialog;
-
     Image image;
     private JLabel imageLabel;
     private JButton button1;
@@ -32,7 +31,6 @@ public class Viewport extends JFrame {
     static int resY;
     private double roughness = 0.5;
     private double lightIntensity = 1.0;
-
     private double ioR = 1.5;
 
     static Camera camera = new Camera(
@@ -115,7 +113,6 @@ public class Viewport extends JFrame {
 
         sidePanel.add(ioRLabel);
         sidePanel.add(ioRSlider);
-
 
         this.imageLabel = new JLabel(new ImageIcon(image));
         frame.add(imageLabel, BorderLayout.CENTER);

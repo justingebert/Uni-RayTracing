@@ -49,4 +49,8 @@ public abstract class Object3D {
         return material.getColor();
     }
 
+    public Material getMaterial() {
+        return material;
+    }
+
 }

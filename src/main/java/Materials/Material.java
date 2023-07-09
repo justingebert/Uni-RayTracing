@@ -10,8 +10,8 @@ public class Material {
     public double roughness;
     public double reflectivity;
     public double transparency;
-
     public double ioR;
+    public Vector3D f0;
     
     //add a constructor
     public Material(Color color, double metalness, double roughness, double transparency, double ioR) {
@@ -70,9 +70,9 @@ public class Material {
     public Vector3D getAlbedo(){
         return new Vector3D(color.getRed(), color.getGreen(), color.getBlue()).scale(1.0/255.0);
     }
-
     public Vector3D getAlbedoGamma(){
-        return new Vector3D(Math.pow(color.getRed(), 2.2), Math.pow(color.getGreen(), 2.2), Math.pow(color.getBlue(), 2.2)).scale(1.0/255.0);
+        Vector3D albedo = new Vector3D(color.getRed(), color.getGreen(), color.getBlue()).scale(1.0/255.0);
+        return new Vector3D(Math.pow(albedo.getX(), 2.2), Math.pow(albedo.getY(), 2.2), Math.pow(albedo.getZ(), 2.2));
     }
     
 }

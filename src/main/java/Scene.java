@@ -62,6 +62,8 @@ public class Scene {
         lights.add(new PointLight(new Vector3D(50, 10, 3), Color.WHITE, .3*lightIntensity,1));
 
         lights.add(new PointLight(new Vector3D(-20, 50, 3), Color.WHITE, .2*lightIntensity,1));
+
+        skyBox = new SkyBox(    );
     }
 
     public void addObject(Object3D object) {

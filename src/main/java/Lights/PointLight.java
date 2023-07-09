@@ -38,6 +38,23 @@ public class PointLight {
     public Vector3D getClampedColor(){
         return new Vector3D(clamp(color.getRed(), 0, 1), clamp(color.getGreen(), 0, 1), clamp(color.getBlue(), 0, 1));
     }
+
+    public Vector3D getRandomPointOnSurface() {
+        // Assuming the light is a sphere, randomly generate a point on its surface using spherical coordinates
+
+        double theta = 2 * Math.PI * Math.random();  // Random angle in radians
+        double phi = Math.acos(2 * Math.random() - 1);  // Random inclination angle in radians
+
+        // Convert spherical coordinates to Cartesian coordinates
+        double x = size * Math.sin(phi) * Math.cos(theta);
+        double y = size * Math.sin(phi) * Math.sin(theta);
+        double z = size * Math.cos(phi);
+
+        // Translate the point to the position of the light
+        Vector3D point = position.add(new Vector3D(x, y, z));
+
+        return point;
+    }
     public Vector3D diffLight(Vector3D point, Object3D object){
         Vector3D normal = object.getNormalAt(point);
         Vector3D lightDir = position.subtract(point).normalize();

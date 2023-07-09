@@ -15,12 +15,10 @@ import static math.Util.clamp;
 
 //TODO make abtract to implemnt area an spot lights
 public class PointLight {
-
     Vector3D position;
     public Color color;
 
     public double size;
-
     public Object3D sphere;
     public double intensity;
 
@@ -37,11 +35,9 @@ public class PointLight {
     public double getIntensity() {
         return intensity;
     }
-
     public Vector3D getClampedColor(){
         return new Vector3D(clamp(color.getRed(), 0, 1), clamp(color.getGreen(), 0, 1), clamp(color.getBlue(), 0, 1));
     }
-
     public Vector3D diffLight(Vector3D point, Object3D object){
         Vector3D normal = object.getNormalAt(point);
         Vector3D lightDir = position.subtract(point).normalize();
@@ -65,7 +61,6 @@ public class PointLight {
 
         return new Vector3D(x, y, z);
     }
-
 
     public Vector3D cookTorranceLight (Vector3D point, Object3D object3D, Ray ray){
         //D*F*G / 4*dot(N,L)*dot(N,V)

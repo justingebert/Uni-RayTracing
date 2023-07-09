@@ -56,29 +56,7 @@ public class Renderer {
     }
 
     //TODO Generate random rays
-    private static Vector3D pathTraceDiffLight(Scene scene,Intersect intersection, Ray ray, int bounces, int numRays) {
-        if(bounces <= 0) return new Vector3D(0, 0, 0);
 
-        Vector3D lightIntensity = new Vector3D(0);
-        for (int i = 0; i < numRays; i++) {
-            Ray randomRay = intersection.generateRandomRay();
-            Intersect randomIntersection = scene.RayData(randomRay);
-            if (randomIntersection != null) {
-                double rn = randomRay.getDirection().dot(intersection.getNormal());
-                lightIntensity = lightIntensity.add(randomIntersection.getMaterial().getAlbedo().scale(rn));
-            }
-        }
-        lightIntensity = lightIntensity.scale(1.0 / numRays);
-        lightIntensity = lightIntensity.add(calcDirectLight(intersection, scene, ray));
-
-        Ray reflectedRay = ray.reflect(intersection.getPosition(), intersection.getNormal());
-
-        Vector3D indirectLight = pathTraceDiffLight(scene, reflectedRay, bounces - 1, numRays);
-        color.add(indirectLight.scale(GLOBAL_ILLUMINATION));
-
-        return color;
-
-    }
 
     private static Vector3D calcColorAtHit(Scene scene, Ray ray, int bounces) {
         if(bounces <= 0) return new Vector3D(0, 0, 0);
@@ -163,6 +141,24 @@ public class Renderer {
         return null;
     }
 
+    private static Vector3D pathTraceDiffLight(Scene scene,Intersect intersection, Ray ray, int bounces, int numRays) {
+        if(bounces <= 0) return new Vector3D(0, 0, 0);
+
+        Vector3D lightIntensity = new Vector3D(0);
+        for (int i = 0; i < numRays; i++) {
+            Ray randomRay = intersection.generateRandomRay();
+            Intersect randomIntersection = scene.RayData(randomRay);
+            if (randomIntersection != null) {
+                double rn = randomRay.getDirection().dot(intersection.getNormal());
+                lightIntensity = lightIntensity.add(randomIntersection.getMaterial().getAlbedo().scale(rn));
+            }
+        }
+        lightIntensity = lightIntensity.scale(1.0 / numRays);
+        lightIntensity = lightIntensity.add(calcDirectLight(intersection, scene, ray));
+
+        return lightIntensity;
+    }
+
     private static Vector3D calcDirectLight(Intersect intersection, Scene scene, Ray ray) {
         ArrayList<PointLight> lights = scene.getLights();
 
@@ -170,7 +166,6 @@ public class Renderer {
         Vector3D V = ray.getDirection().scale(-1).normalize();
         Vector3D one = new Vector3D(1.0);
         double r = intersection.getHitObject().getRoughness();
-
 
         for (PointLight light : lights) {
             Vector3D lightColor = light.getClampedColor();

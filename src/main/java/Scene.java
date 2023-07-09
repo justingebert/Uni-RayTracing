@@ -15,12 +15,15 @@ public class Scene {
     ArrayList<Object3D> objects = new ArrayList<Object3D>();
     ArrayList<PointLight> lights = new ArrayList<PointLight>();
     Camera activeCamera;
+
+    SkyBox skyBox;
     public Camera getActiveCamera() {
         return activeCamera;
     }
     public void setActiveCamera(Camera activeCamera) {
         this.activeCamera = activeCamera;
     }
+
 
 
     public Scene(double roughness, double lightIntensity, double ioR){
@@ -54,11 +57,11 @@ public class Scene {
         objects.add(sphere4);
 
         //objects.add(q1);
-        lights.add(new PointLight(new Vector3D(-10, -9, 10), Color.WHITE, .4*lightIntensity));
+        lights.add(new PointLight(new Vector3D(-10, -9, 10), Color.WHITE, .4*lightIntensity,1));
         //lights.add(new PointLight(new Vector3D(20, 5, 0), Color.WHITE, 10));
-        lights.add(new PointLight(new Vector3D(50, 10, 3), Color.WHITE, .3*lightIntensity));
+        lights.add(new PointLight(new Vector3D(50, 10, 3), Color.WHITE, .3*lightIntensity,1));
 
-        lights.add(new PointLight(new Vector3D(-20, 50, 3), Color.WHITE, .2*lightIntensity));
+        lights.add(new PointLight(new Vector3D(-20, 50, 3), Color.WHITE, .2*lightIntensity,1));
     }
 
     public void addObject(Object3D object) {

@@ -49,18 +49,25 @@ public class Viewport extends JFrame {
         this.resX = resX;
         this.resY = resY;
 
-        int[] pixels = Renderer.renderImage(scene, resY, resX);
+        int[] pixels = Renderer.renderImage(scene, resY, resX, 6);
 
         MemoryImageSource mis = new MemoryImageSource(resX, resY, new DirectColorModel(24, 0xff0000, 0xff00, 0xff), pixels, 0, resX);
         Image image = Toolkit.getDefaultToolkit().createImage(mis);
 
+
+        //*FRAME*//
         this.frame = new JFrame();
         frame.setTitle("Ray Tracer Viewport");
+        //*PANELS*//
+        JPanel sidePanelRight = new JPanel();
+        sidePanelRight.setLayout(new BoxLayout(sidePanelRight, BoxLayout.Y_AXIS));
+        sidePanelRight.setPreferredSize(new Dimension(200, resY));
 
-        JPanel sidePanel = new JPanel();
-        sidePanel.setLayout(new BoxLayout(sidePanel, BoxLayout.Y_AXIS));
-        sidePanel.setPreferredSize(new Dimension(200, resY));
+        JPanel sidePanelLeft = new JPanel();
+        sidePanelLeft.setLayout(new BoxLayout(sidePanelRight, BoxLayout.Y_AXIS));
+        sidePanelLeft.setPreferredSize(new Dimension(200, resY));
 
+        //*OPTIONS RIGHT*//
         JLabel roughnessLabel = new JLabel("Roughness");
         JSlider roughnessSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
         roughnessSlider.setMajorTickSpacing(10);
@@ -68,7 +75,6 @@ public class Viewport extends JFrame {
         JLabel lightIntensityLabel = new JLabel("lightIntensity");
         JSlider lightIntensitySlider = new JSlider(JSlider.HORIZONTAL, 0, 200, 100);
         lightIntensitySlider.setMajorTickSpacing(10);
-
 
         JLabel ioRLabel = new JLabel("ioR");
         JSlider ioRSlider = new JSlider(JSlider.HORIZONTAL, 0, 300, 100);
@@ -104,24 +110,62 @@ public class Viewport extends JFrame {
             }
         });
 
+        sidePanelRight.add(roughnessLabel);
+        sidePanelRight.add(roughnessSlider);
 
-        sidePanel.add(roughnessLabel);
-        sidePanel.add(roughnessSlider);
+        sidePanelRight.add(lightIntensityLabel);
+        sidePanelRight.add(lightIntensitySlider);
 
-        sidePanel.add(lightIntensityLabel);
-        sidePanel.add(lightIntensitySlider);
+        sidePanelRight.add(ioRLabel);
+        sidePanelRight.add(ioRSlider);
 
-        sidePanel.add(ioRLabel);
-        sidePanel.add(ioRSlider);
+        //*OPTIONS LEFT*//
+        JLabel translateXLabel = new JLabel("Translate X");
+        JSlider translateXSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+        translateXSlider.setMajorTickSpacing(10);
+
+        JLabel translateYLabel = new JLabel("Translate Y");
+        JSlider translateYSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+        translateYSlider.setMajorTickSpacing(10);
+
+        JLabel translateZLabel = new JLabel("Translate Z");
+        JSlider translateZSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+        translateZSlider.setMajorTickSpacing(10);
+
+        JLabel rotateXLabel = new JLabel("Rotate X");
+        JSlider rotateXSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+        rotateXSlider.setMajorTickSpacing(10);
+
+        JLabel rotateYLabel = new JLabel("Rotate Y");
+        JSlider rotateYSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+        rotateYSlider.setMajorTickSpacing(10);
+
+        JLabel rotateZLabel = new JLabel("Rotate Z");
+        JSlider rotateZSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+        rotateZSlider.setMajorTickSpacing(10);
+
+        JLabel scaleXLabel = new JLabel("Scale X");
+        JSlider scaleXSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+        scaleXSlider.setMajorTickSpacing(10);
+
+        JLabel scaleYLabel = new JLabel("Scale Y");
+        JSlider scaleYSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+        scaleYSlider.setMajorTickSpacing(10);
+
+        JLabel scaleZLabel = new JLabel("Scale Z");
+        JSlider scaleZSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+        scaleZSlider.setMajorTickSpacing(10);
+
+
 
         this.imageLabel = new JLabel(new ImageIcon(image));
         frame.add(imageLabel, BorderLayout.CENTER);
-        frame.add(sidePanel, BorderLayout.EAST);
+        frame.add(sidePanelRight, BorderLayout.EAST);
 
     }
 
     public void updateImage() {
-        int[] pixels = Renderer.renderImage(scene, resY, resX);
+        int[] pixels = Renderer.renderImage(scene, resY, resX, 6);
         MemoryImageSource mis = new MemoryImageSource(resX, resY, new DirectColorModel(24, 0xff0000, 0xff00, 0xff), pixels, 0, resX);
         Image image = Toolkit.getDefaultToolkit().createImage(mis);
         imageLabel.setIcon(new ImageIcon(image));

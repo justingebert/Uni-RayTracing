@@ -6,6 +6,8 @@ import math.Ray;
 import math.Vector3D;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.*;
 
 import static math.Util.clamp;
 
@@ -20,12 +22,11 @@ public class Renderer {
     private static int SHADOW_RAYS = 5;
     private static int DIFFUSE_RAYS = 1;
 
-    public static int[] renderImage(Scene scene, int resY, int resX) {
+    /*public static int[] renderImage(Scene scene, int resY, int resX) {
         int[] pixels = new int[resX * resY];
         for (int y = 0; y < resY; ++y) {
             for (int x = 0; x < resX; ++x) {
 
-                //TODO first intersection should not be here
                 Ray ray = scene.getActiveCamera().eyeToImage(x, y, resX, resY);
                 Vector3D color = calcColorAtHit(scene, ray, MAX_REFLECTION_BOUNCES);
                 //gamma correction
@@ -39,6 +40,68 @@ public class Renderer {
             }
         }
         return pixels;
+    }*/
+
+    public static int[] renderImage(Scene scene, int resY, int resX, int numThreads) {
+        int[] pixels = new int[resX * resY];
+        ExecutorService executor = Executors.newFixedThreadPool(numThreads);
+        List<Future<Void>> futures = new ArrayList<>();
+
+        for (int t = 0; t < numThreads; t++) {
+            int startY = t * (resY / numThreads);
+            int endY = (t + 1) * (resY / numThreads);
+
+            Runnable renderTask = new RenderTask(scene, resX, resY, startY, endY, pixels);
+            Future<Void> future = executor.submit(renderTask, null);
+            futures.add(future);
+        }
+
+        for (Future<Void> future : futures) {
+            try {
+                future.get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+
+        executor.shutdown();
+
+        return pixels;
+    }
+
+    private static class RenderTask implements Runnable {
+        private final Scene scene;
+        private final int resX;
+        private final int resY;
+        private final int startY;
+        private final int endY;
+        private final int[] pixels;
+
+        public RenderTask(Scene scene, int resX, int resY, int startY, int endY, int[] pixels) {
+            this.scene = scene;
+            this.resX = resX;
+            this.resY = resY;
+            this.startY = startY;
+            this.endY = endY;
+            this.pixels = pixels;
+        }
+
+        @Override
+        public void run() {
+            for (int y = startY; y < endY; ++y) {
+                for (int x = 0; x < resX; ++x) {
+
+                    Ray ray = scene.getActiveCamera().eyeToImage(x, y, resX, resY);
+                    Vector3D color = calcColorAtHit(scene, ray, MAX_REFLECTION_BOUNCES);
+                    //gamma correction
+                    double r = Math.pow(clamp(color.getX(), 0, 1), 0.45) * 255;
+                    double g = Math.pow(clamp(color.getY(), 0, 1), 0.45) * 255;
+                    double b = Math.pow(clamp(color.getZ(), 0, 1), 0.45) * 255;
+                    int RGB = (0xFF << 24) | ((int) r << 16) | ((int) g << 8) | (int) b;
+                    pixels[y * resX + x] = RGB;
+                }
+            }
+        }
     }
 
     private static Vector3D calcColorAtHit(Scene scene, Ray ray, int bounces) {

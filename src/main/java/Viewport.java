@@ -127,7 +127,6 @@ public class Viewport extends JFrame {
         imageLabel.setIcon(new ImageIcon(image));
         frame.add(imageLabel, BorderLayout.CENTER);
         frame.repaint();
-        System.out.println("Image updated.");
     }
 
     public void renderToImage(int width, int height) throws IOException {

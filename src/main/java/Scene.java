@@ -15,16 +15,17 @@ public class Scene {
     ArrayList<Object3D> objects = new ArrayList<Object3D>();
     ArrayList<PointLight> lights = new ArrayList<PointLight>();
     Camera activeCamera;
-
     SkyBox skyBox;
+
     public Camera getActiveCamera() {
         return activeCamera;
     }
     public void setActiveCamera(Camera activeCamera) {
         this.activeCamera = activeCamera;
     }
-
-
+    public SkyBox getSkyBox(){
+        return skyBox;
+    }
 
     public Scene(double roughness, double lightIntensity, double ioR){
 
@@ -63,7 +64,7 @@ public class Scene {
 
         lights.add(new PointLight(new Vector3D(-20, 50, 3), Color.WHITE, .2*lightIntensity,1));
 
-        skyBox = new SkyBox(    );
+        skyBox = new SkyBox("C:\\Users\\Justin\\Documents\\PROJECTS\\Uni\\Raytracing\\Raytracer\\src\\tex\\skybox.png");
     }
 
     public void addObject(Object3D object) {

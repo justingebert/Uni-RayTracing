@@ -28,29 +28,22 @@ public abstract class Object3D {
 
     //public abstract Vector3D calculateIntersection2(Ray ray);
     public abstract Vector3D getNormalAt(Vector3D point);
-
     public double getReflectivity() {
         return material.getReflectivity();
     }
-
     public double getTransparency() {
         return material.getTransparency();
     }
-
     public double getMetalness() {
         return material.getMetalness();
     }
-
     public double getRoughness() {
         return material.getRoughness();
     }
-
     public Color getColor() {
         return material.getColor();
     }
-
     public Material getMaterial() {
         return material;
     }
-
 }

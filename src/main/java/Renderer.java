@@ -11,7 +11,7 @@ import static math.Util.clamp;
 
 public class Renderer {
     private static final float GLOBAL_ILLUMINATION = 0.0003F;
-    private static final int MAX_REFLECTION_BOUNCES = 5;
+    private static final int MAX_REFLECTION_BOUNCES = 4;
     private static final boolean SHOW_SKYBOX = true;
     private static boolean INDIRECT_LIGHTING = true;
     private static boolean REFLECTIONS = true;
@@ -47,8 +47,8 @@ public class Renderer {
         Intersect intersection = scene.RayData(ray);
         if (intersection == null) {
             if(SHOW_SKYBOX){
-                //return scene.getSkybox().getColor(ray);
-                return new Vector3D(0, 0, 0);
+                return scene.getSkyBox().getColor(ray);
+                //return new Vector3D(0, 0, 0);
             }else{
                 return new Vector3D(0, 0, 0);
             }
@@ -82,9 +82,7 @@ public class Renderer {
             if (reflectionIntersection != null) {
                 colorReflection = calcColorAtHit(scene, reflectionRay, bounces-1);
             } else {
-                //colS = scene.getSkybox().getColor(reflectionRay);
-                colorReflection = albedoG;
-                //?correct???
+                colorReflection = scene.getSkyBox().getColor(reflectionRay);
             }
         }
 
@@ -174,6 +172,8 @@ public class Renderer {
 
 
     //TODO
+    private static Vector3D hardShadows(Scene scene, Intersect intersection, Ray ray, int bounces, int numRays) {return new Vector3D(0);}
+    private static Vector3D softShadows(Scene scene, Intersect intersection, Ray ray, int bounces, int numRays) {return new Vector3D(0);}
     private static Vector3D pathTraceIndirectLight(Scene scene,Intersect intersection, Ray ray, int bounces, int numRays) {return new Vector3D(0);}
     private static Vector3D cookTorrance(){
         return null;

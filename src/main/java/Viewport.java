@@ -25,6 +25,9 @@ public class Viewport extends JFrame {
     private JButton button1;
     private JSlider slider;
     private JComboBox<String> comboBox;
+
+    private JList<String> sceneList;
+    private DefaultListModel<String> sceneListModel;
     private Scene scene;
     private int[] pixels;
     static int resX;
@@ -49,7 +52,7 @@ public class Viewport extends JFrame {
         this.resX = resX;
         this.resY = resY;
 
-        int[] pixels = Renderer.renderImage(scene, resY, resX, 6);
+        int[] pixels = Renderer.renderImage(scene, resY, resX, 12);
 
         MemoryImageSource mis = new MemoryImageSource(resX, resY, new DirectColorModel(24, 0xff0000, 0xff00, 0xff), pixels, 0, resX);
         Image image = Toolkit.getDefaultToolkit().createImage(mis);
@@ -64,7 +67,7 @@ public class Viewport extends JFrame {
         sidePanelRight.setPreferredSize(new Dimension(200, resY));
 
         JPanel sidePanelLeft = new JPanel();
-        sidePanelLeft.setLayout(new BoxLayout(sidePanelRight, BoxLayout.Y_AXIS));
+        sidePanelLeft.setLayout(new BoxLayout(sidePanelLeft, BoxLayout.Y_AXIS));
         sidePanelLeft.setPreferredSize(new Dimension(200, resY));
 
         //*OPTIONS RIGHT*//
@@ -120,52 +123,85 @@ public class Viewport extends JFrame {
         sidePanelRight.add(ioRSlider);
 
         //*OPTIONS LEFT*//
+
+/*        sceneListModel = new DefaultListModel<>();
+        sceneList = new JList<>(sceneListModel);
+        sceneList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        sceneList.addListSelectionListener(new SceneSelectionListener());
+
+        addObjectButton = new JButton("Add Object");
+        addObjectButton.addActionListener(new AddObjectListener());
+        removeObjectButton = new JButton("Remove Object");
+        removeObjectButton.addActionListener(new RemoveObjectListener());*/
+
         JLabel translateXLabel = new JLabel("Translate X");
-        JSlider translateXSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+        JSlider translateXSlider = new JSlider(JSlider.HORIZONTAL, -10, 10, 0);
         translateXSlider.setMajorTickSpacing(10);
 
         JLabel translateYLabel = new JLabel("Translate Y");
-        JSlider translateYSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+        JSlider translateYSlider = new JSlider(JSlider.HORIZONTAL, -10, 10, 0);
         translateYSlider.setMajorTickSpacing(10);
 
         JLabel translateZLabel = new JLabel("Translate Z");
-        JSlider translateZSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+        JSlider translateZSlider = new JSlider(JSlider.HORIZONTAL, -10, 10, 0);
         translateZSlider.setMajorTickSpacing(10);
 
         JLabel rotateXLabel = new JLabel("Rotate X");
-        JSlider rotateXSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+        JSlider rotateXSlider = new JSlider(JSlider.HORIZONTAL, -180, 180, 0);
         rotateXSlider.setMajorTickSpacing(10);
 
         JLabel rotateYLabel = new JLabel("Rotate Y");
-        JSlider rotateYSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+        JSlider rotateYSlider = new JSlider(JSlider.HORIZONTAL, -180, 180, 0);
         rotateYSlider.setMajorTickSpacing(10);
 
         JLabel rotateZLabel = new JLabel("Rotate Z");
-        JSlider rotateZSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+        JSlider rotateZSlider = new JSlider(JSlider.HORIZONTAL, -180, 180, 0);
         rotateZSlider.setMajorTickSpacing(10);
 
         JLabel scaleXLabel = new JLabel("Scale X");
-        JSlider scaleXSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+        JSlider scaleXSlider = new JSlider(JSlider.HORIZONTAL, -5, 5, 1);
         scaleXSlider.setMajorTickSpacing(10);
 
         JLabel scaleYLabel = new JLabel("Scale Y");
-        JSlider scaleYSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+        JSlider scaleYSlider = new JSlider(JSlider.HORIZONTAL, -5, 5, 1);
         scaleYSlider.setMajorTickSpacing(10);
 
         JLabel scaleZLabel = new JLabel("Scale Z");
-        JSlider scaleZSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+        JSlider scaleZSlider = new JSlider(JSlider.HORIZONTAL, -5, 5, 1);
         scaleZSlider.setMajorTickSpacing(10);
+
+        sidePanelLeft.add(translateXLabel);
+        sidePanelLeft.add(translateXSlider);
+        sidePanelLeft.add(translateYLabel);
+        sidePanelLeft.add(translateYSlider);
+        sidePanelLeft.add(translateZLabel);
+        sidePanelLeft.add(translateZSlider);
+
+        sidePanelLeft.add(rotateXLabel);
+        sidePanelLeft.add(rotateXSlider);
+        sidePanelLeft.add(rotateYLabel);
+        sidePanelLeft.add(rotateYSlider);
+        sidePanelLeft.add(rotateZLabel);
+        sidePanelLeft.add(rotateZSlider);
+
+        sidePanelLeft.add(scaleXLabel);
+        sidePanelLeft.add(scaleXSlider);
+        sidePanelLeft.add(scaleYLabel);
+        sidePanelLeft.add(scaleYSlider);
+        sidePanelLeft.add(scaleZLabel);
+        sidePanelLeft.add(scaleZSlider);
 
 
 
         this.imageLabel = new JLabel(new ImageIcon(image));
         frame.add(imageLabel, BorderLayout.CENTER);
         frame.add(sidePanelRight, BorderLayout.EAST);
+        frame.add(sidePanelLeft, BorderLayout.WEST);
 
     }
 
     public void updateImage() {
-        int[] pixels = Renderer.renderImage(scene, resY, resX, 6);
+        int[] pixels = Renderer.renderImage(scene, resY, resX, 12);
         MemoryImageSource mis = new MemoryImageSource(resX, resY, new DirectColorModel(24, 0xff0000, 0xff00, 0xff), pixels, 0, resX);
         Image image = Toolkit.getDefaultToolkit().createImage(mis);
         imageLabel.setIcon(new ImageIcon(image));

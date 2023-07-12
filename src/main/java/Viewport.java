@@ -17,6 +17,7 @@ import java.io.IOException;
 
 public class Viewport extends JFrame {
 
+    private int NUM_OF_THREADS = 30;
     private JFrame frame;
     private JPanel sidePanel;
     private JDialog settingsDialog;
@@ -25,7 +26,6 @@ public class Viewport extends JFrame {
     private JButton button1;
     private JSlider slider;
     private JComboBox<String> comboBox;
-
     private JList<String> sceneList;
     private DefaultListModel<String> sceneListModel;
     private Scene scene;
@@ -52,11 +52,10 @@ public class Viewport extends JFrame {
         this.resX = resX;
         this.resY = resY;
 
-        int[] pixels = Renderer.renderImage(scene, resY, resX, 12);
+        int[] pixels = Renderer.renderImage(scene, resY, resX, NUM_OF_THREADS);
 
         MemoryImageSource mis = new MemoryImageSource(resX, resY, new DirectColorModel(24, 0xff0000, 0xff00, 0xff), pixels, 0, resX);
         Image image = Toolkit.getDefaultToolkit().createImage(mis);
-
 
         //*FRAME*//
         this.frame = new JFrame();
@@ -134,64 +133,95 @@ public class Viewport extends JFrame {
         removeObjectButton = new JButton("Remove Object");
         removeObjectButton.addActionListener(new RemoveObjectListener());*/
 
+        JComboBox<String> sceneBox = new JComboBox<>();
+
+        JComboBox<String> ObjectBox = new JComboBox<>();
+
+        JComboBox<String> SkyboxBox = new JComboBox<>();
+
         JLabel translateXLabel = new JLabel("Translate X");
         JSlider translateXSlider = new JSlider(JSlider.HORIZONTAL, -10, 10, 0);
         translateXSlider.setMajorTickSpacing(10);
+
+        JButton sinTX = new JButton("SinTX");
 
         JLabel translateYLabel = new JLabel("Translate Y");
         JSlider translateYSlider = new JSlider(JSlider.HORIZONTAL, -10, 10, 0);
         translateYSlider.setMajorTickSpacing(10);
 
+        JButton sinTY = new JButton("SinTY");
+
         JLabel translateZLabel = new JLabel("Translate Z");
         JSlider translateZSlider = new JSlider(JSlider.HORIZONTAL, -10, 10, 0);
         translateZSlider.setMajorTickSpacing(10);
+
+        JButton sinTZ = new JButton("SinTZ");
 
         JLabel rotateXLabel = new JLabel("Rotate X");
         JSlider rotateXSlider = new JSlider(JSlider.HORIZONTAL, -180, 180, 0);
         rotateXSlider.setMajorTickSpacing(10);
 
+        JButton sinRX = new JButton("SinRX");
+
         JLabel rotateYLabel = new JLabel("Rotate Y");
         JSlider rotateYSlider = new JSlider(JSlider.HORIZONTAL, -180, 180, 0);
         rotateYSlider.setMajorTickSpacing(10);
+
+        JButton sinRY = new JButton("SinRY");
 
         JLabel rotateZLabel = new JLabel("Rotate Z");
         JSlider rotateZSlider = new JSlider(JSlider.HORIZONTAL, -180, 180, 0);
         rotateZSlider.setMajorTickSpacing(10);
 
+        JButton sinRZ = new JButton("SinRZ");
+
         JLabel scaleXLabel = new JLabel("Scale X");
         JSlider scaleXSlider = new JSlider(JSlider.HORIZONTAL, -5, 5, 1);
         scaleXSlider.setMajorTickSpacing(10);
+
+        JButton sinSX = new JButton("SinSX");
 
         JLabel scaleYLabel = new JLabel("Scale Y");
         JSlider scaleYSlider = new JSlider(JSlider.HORIZONTAL, -5, 5, 1);
         scaleYSlider.setMajorTickSpacing(10);
 
+        JButton sinSY = new JButton("SinSY");
+
         JLabel scaleZLabel = new JLabel("Scale Z");
         JSlider scaleZSlider = new JSlider(JSlider.HORIZONTAL, -5, 5, 1);
         scaleZSlider.setMajorTickSpacing(10);
 
+        JButton sinSZ = new JButton("SinSZ");
+
         sidePanelLeft.add(translateXLabel);
         sidePanelLeft.add(translateXSlider);
+        sidePanelLeft.add(sinTX);
         sidePanelLeft.add(translateYLabel);
         sidePanelLeft.add(translateYSlider);
+        sidePanelLeft.add(sinTY);
         sidePanelLeft.add(translateZLabel);
         sidePanelLeft.add(translateZSlider);
+        sidePanelLeft.add(sinTZ);
 
         sidePanelLeft.add(rotateXLabel);
         sidePanelLeft.add(rotateXSlider);
+        sidePanelLeft.add(sinRX);
         sidePanelLeft.add(rotateYLabel);
         sidePanelLeft.add(rotateYSlider);
+        sidePanelLeft.add(sinRY);
         sidePanelLeft.add(rotateZLabel);
         sidePanelLeft.add(rotateZSlider);
+        sidePanelLeft.add(sinRZ);
 
         sidePanelLeft.add(scaleXLabel);
         sidePanelLeft.add(scaleXSlider);
+        sidePanelLeft.add(sinSX);
         sidePanelLeft.add(scaleYLabel);
         sidePanelLeft.add(scaleYSlider);
+        sidePanelLeft.add(sinSY);
         sidePanelLeft.add(scaleZLabel);
         sidePanelLeft.add(scaleZSlider);
-
-
+        sidePanelLeft.add(sinSZ);
 
         this.imageLabel = new JLabel(new ImageIcon(image));
         frame.add(imageLabel, BorderLayout.CENTER);
@@ -201,7 +231,7 @@ public class Viewport extends JFrame {
     }
 
     public void updateImage() {
-        int[] pixels = Renderer.renderImage(scene, resY, resX, 12);
+        int[] pixels = Renderer.renderImage(scene, resY, resX, NUM_OF_THREADS);
         MemoryImageSource mis = new MemoryImageSource(resX, resY, new DirectColorModel(24, 0xff0000, 0xff00, 0xff), pixels, 0, resX);
         Image image = Toolkit.getDefaultToolkit().createImage(mis);
         imageLabel.setIcon(new ImageIcon(image));

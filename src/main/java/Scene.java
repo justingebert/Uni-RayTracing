@@ -51,7 +51,6 @@ public class Scene {
         quadricTransformation2.setQuadricTranslation(-3,0,-6);
         q1.applyTransformation(quadricTransformation);
 
-
         objects.add(sphere1);
         objects.add(sphere2);
         objects.add(sphere3);
@@ -64,7 +63,7 @@ public class Scene {
 
         lights.add(new PointLight(new Vector3D(-20, 50, 3), Color.WHITE, .2*lightIntensity,1));
 
-        skyBox = new SkyBox("C:\\Users\\Justin\\Documents\\PROJECTS\\Uni\\Raytracing\\Raytracer\\src\\tex\\skybox.png");
+        skyBox = new SkyBox("C:\\Users\\justi\\Documents\\PROJECTS\\Uni\\RayTracing\\src\\tex\\skybox.png");
     }
 
     public void addObject(Object3D object) {

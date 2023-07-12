@@ -66,24 +66,22 @@ public class Scene {
         skyBox = new SkyBox("C:\\Users\\justi\\Documents\\PROJECTS\\Uni\\RayTracing\\src\\tex\\skybox.png");
     }
 
-    public void addObject(Object3D object) {
-        this.objects.add(object);
-    }
-
-    public void addLight(PointLight light) {
-        this.lights.add(light);
-    }
-    public ArrayList<PointLight> getLights() {
-        return this.lights;
-    }
-
     public static Scene getScene(){
         if(scene == null){
             scene = new Scene(0.5,1,1.5);
         }
         return scene;
     }
-
+    public void addObject(Object3D object) {
+        this.objects.add(object);
+    }
+    public void addLight(PointLight light) {
+        this.lights.add(light);
+    }
+    public ArrayList<PointLight> getLights() {
+        return this.lights;
+    }
+    public ArrayList<Object3D> getObjects() {return this.objects;}
     public Intersect RayData(Ray ray){
         Intersect nearestIntersection = null;
         for(Object3D object : this.objects) {
@@ -95,4 +93,24 @@ public class Scene {
         }
         return nearestIntersection;
     }
+
+    public void updateScene(){
+
+    }
+    public void updateObject(int id, double tx, double ty, double tz, double rx, double ry, double rz, double sx, double sy, double sz){
+        objects.stream().filter(object -> object.getId() == id).forEach(object -> {
+            Matrix4x4 transformation = new Matrix4x4();
+            transformation.setTranslation(tx,ty,tz);
+            transformation.setRotation(rx,ry,rz);
+            transformation.setScale(sx,sy,sz);
+            object.applyTransformation(transformation);
+        }
+    }
+    public void updateMaterial(){
+
+    }
+
+    public void
+
+
 }

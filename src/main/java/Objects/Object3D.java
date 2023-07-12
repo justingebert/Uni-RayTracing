@@ -3,15 +3,20 @@ package Objects;
 import Materials.Material;
 import math.*;
 import java.awt.*;
+import java.util.List;
 
 public abstract class Object3D {
 
+    protected int id;
     protected Vector3D position;
     public Material material;
+    private static List<Object3D> objects;
 
     public Object3D(Vector3D position, Material material){
         this.position = position;
         this.material = material;
+        id = objects.size();
+        objects.add(this);
     }
 
     public Vector3D getPosition() {

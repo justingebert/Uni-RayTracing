@@ -6,35 +6,26 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.DirectColorModel;
 import java.awt.image.MemoryImageSource;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Viewport extends JFrame {
 
-    private int NUM_OF_THREADS = 30;
-    private JFrame frame;
-    private JPanel sidePanel;
-    private JDialog settingsDialog;
-    Image image;
-    private JLabel imageLabel;
-    private JButton button1;
-    private JSlider slider;
-    private JComboBox<String> comboBox;
-    private JList<String> sceneList;
-    private DefaultListModel<String> sceneListModel;
-    private Scene scene;
-    private int[] pixels;
     static int resX;
     static int resY;
+    private JFrame frame;
+    private JLabel imageLabel;
+    private Scene defaultScene;
+    private ArrayList<Scene> scenes = new ArrayList<>();
     private double roughness = 0.5;
     private double lightIntensity = 1.0;
     private double ioR = 1.5;
+    private int NUM_OF_THREADS = 30;
 
     static Camera camera = new Camera(
             new Vector3D(0, 0, 1),
@@ -46,13 +37,13 @@ public class Viewport extends JFrame {
     );
 
     public Viewport(int resX, int resY) {
-        scene = new Scene(0.5,1.0,1.5);
-        scene.setActiveCamera(camera);
+        defaultScene = new Scene(0.5,1.0,1.5);
+        defaultScene.setActiveCamera(camera);
 
         this.resX = resX;
         this.resY = resY;
 
-        int[] pixels = Renderer.renderImage(scene, resY, resX, NUM_OF_THREADS);
+        int[] pixels = Renderer.renderImage(defaultScene, resY, resX, NUM_OF_THREADS);
 
         MemoryImageSource mis = new MemoryImageSource(resX, resY, new DirectColorModel(24, 0xff0000, 0xff00, 0xff), pixels, 0, resX);
         Image image = Toolkit.getDefaultToolkit().createImage(mis);
@@ -87,8 +78,8 @@ public class Viewport extends JFrame {
                 roughness = (double) roughnessSlider.getValue() / 100.0;
                 // Update the roughness value in the material
                 //updateRoughness(roughnessValue);
-                scene = new Scene(roughness, lightIntensity, ioR);
-                scene.setActiveCamera(camera);
+                defaultScene = new Scene(roughness, lightIntensity, ioR);
+                defaultScene.setActiveCamera(camera);
             }
         });
 
@@ -97,8 +88,8 @@ public class Viewport extends JFrame {
                 lightIntensity = (double) lightIntensitySlider.getValue() / 100.0;
                 // Update the roughness value in the material
                 //updateRoughness(roughnessValue);
-                scene = new Scene(roughness, lightIntensity, ioR);
-                scene.setActiveCamera(camera);
+                defaultScene = new Scene(roughness, lightIntensity, ioR);
+                defaultScene.setActiveCamera(camera);
             }
         });
 
@@ -107,8 +98,8 @@ public class Viewport extends JFrame {
                 ioR = (double) ioRSlider.getValue() / 100.0;
                 // Update the roughness value in the material
                 //updateRoughness(roughnessValue);
-                scene = new Scene(roughness, lightIntensity, ioR);
-                scene.setActiveCamera(camera);
+                defaultScene = new Scene(roughness, lightIntensity, ioR);
+                defaultScene.setActiveCamera(camera);
             }
         });
 
@@ -231,7 +222,7 @@ public class Viewport extends JFrame {
     }
 
     public void updateImage() {
-        int[] pixels = Renderer.renderImage(scene, resY, resX, NUM_OF_THREADS);
+        int[] pixels = Renderer.renderImage(defaultScene, resY, resX, NUM_OF_THREADS);
         MemoryImageSource mis = new MemoryImageSource(resX, resY, new DirectColorModel(24, 0xff0000, 0xff00, 0xff), pixels, 0, resX);
         Image image = Toolkit.getDefaultToolkit().createImage(mis);
         imageLabel.setIcon(new ImageIcon(image));

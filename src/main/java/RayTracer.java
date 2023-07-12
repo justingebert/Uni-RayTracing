@@ -49,3 +49,7 @@ public class RayTracer {
         }
     }
 }
+
+//! IMPLEMENTED:
+/*indirect lighting, aniamtion, Multithreading, Skybox,
+ */

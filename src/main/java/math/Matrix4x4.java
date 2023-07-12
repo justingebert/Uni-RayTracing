@@ -55,6 +55,12 @@ public class Matrix4x4 {
         matrix[2][3] = -1*tz;
     }
 
+    public void setRotation(double angleX, double angleY, double angleZ) {
+        setRotationX(angleX);
+        setRotationY(angleY);
+        setRotationZ(angleZ);
+    }
+
     public void setRotationX(double angle) {
         double cos = Math.cos(angle);
         double sin = Math.sin(angle);

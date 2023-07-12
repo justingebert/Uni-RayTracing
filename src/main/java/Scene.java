@@ -29,9 +29,9 @@ public class Scene {
 
     public Scene(double roughness, double lightIntensity, double ioR){
 
-        System.out.println(roughness);
+        //System.out.println(roughness);
         Material greenMat = new Material(Color.GREEN    ,0,roughness,0,1);
-        Material blueMat = new Material(Color.WHITE,0,roughness,0.75,ioR);
+        Material blueMat = new Material(Color.WHITE,0,roughness,0.95,ioR);
         Material redMat = new Material(Color.RED,0,0.1,0,1);
         Material blackMat = new Material(Color.BLACK,0,0.1,0,1);
         Material cyanMat = new Material(Color.CYAN,0,0.2,0,1);
@@ -40,6 +40,7 @@ public class Scene {
        Sphere sphere2 = new Sphere(new Vector3D(2, -0, -12), redMat, 1);
        Sphere sphere3 = new Sphere(new Vector3D(2, -1, -8), blueMat, 1);
        Sphere sphere4 = new Sphere(new Vector3D(-1, 0, -3), blueMat, .5);
+       //Sphere sphere5 = new Sphere(new Vector3D(0, 10, -5), redMat, 5);
 
        Quadric q1 = new Quadric( 1, 1, 1, 0, 0, 0, 0, 0, 0,-1, new Vector3D(0, 0, -10), redMat);
        Matrix4x4 quadricTransformation = new Matrix4x4();
@@ -55,6 +56,7 @@ public class Scene {
         objects.add(sphere2);
         objects.add(sphere3);
         objects.add(sphere4);
+        //objects.add(sphere5);
 
         //objects.add(q1);
         lights.add(new PointLight(new Vector3D(-10, -9, 10), Color.WHITE, .4*lightIntensity,1));
@@ -63,7 +65,7 @@ public class Scene {
 
         lights.add(new PointLight(new Vector3D(-20, 50, 3), Color.WHITE, .2*lightIntensity,1));
 
-        skyBox = new SkyBox("C:\\Users\\justi\\Documents\\PROJECTS\\Uni\\RayTracing\\src\\tex\\skybox.png");
+        skyBox = new SkyBox("C:\\Users\\justi\\Documents\\PROJECTS\\Uni\\RayTracing\\src\\tex\\skybox5.jpg");
     }
 
     public static Scene getScene(){
@@ -97,20 +99,17 @@ public class Scene {
     public void updateScene(){
 
     }
-    public void updateObject(int id, double tx, double ty, double tz, double rx, double ry, double rz, double sx, double sy, double sz){
+    public void updateObject(int id, double tx, double ty, double tz, double rx, double ry, double rz, double sx, double sy, double sz, boolean Animate){
         objects.stream().filter(object -> object.getId() == id).forEach(object -> {
             Matrix4x4 transformation = new Matrix4x4();
             transformation.setTranslation(tx,ty,tz);
             transformation.setRotation(rx,ry,rz);
             transformation.setScale(sx,sy,sz);
             object.applyTransformation(transformation);
-        }
+        });
     }
     public void updateMaterial(){
 
     }
-
-    public void
-
 
 }

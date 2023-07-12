@@ -1,4 +1,5 @@
 import Objects.Camera;
+import Objects.Object3D;
 import math.Vector3D;
 
 import javax.imageio.ImageIO;
@@ -6,6 +7,8 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.DirectColorModel;
 import java.awt.image.MemoryImageSource;
@@ -18,9 +21,12 @@ public class Viewport extends JFrame {
 
     static int resX;
     static int resY;
+
+    private Timer timer;
     private JFrame frame;
     private JLabel imageLabel;
-    private Scene defaultScene;
+    private Scene currentScene;
+    private Object3D selectedObject;
     private ArrayList<Scene> scenes = new ArrayList<>();
     private double roughness = 0.5;
     private double lightIntensity = 1.0;
@@ -37,13 +43,15 @@ public class Viewport extends JFrame {
     );
 
     public Viewport(int resX, int resY) {
-        defaultScene = new Scene(0.5,1.0,1.5);
-        defaultScene.setActiveCamera(camera);
+        currentScene = new Scene(0.5,1.0,1.5);
+        currentScene.setActiveCamera(camera);
+
+        selectedObject = currentScene.getObjects().get(0);
 
         this.resX = resX;
         this.resY = resY;
 
-        int[] pixels = Renderer.renderImage(defaultScene, resY, resX, NUM_OF_THREADS);
+        int[] pixels = Renderer.renderImage(currentScene, resY, resX, NUM_OF_THREADS);
 
         MemoryImageSource mis = new MemoryImageSource(resX, resY, new DirectColorModel(24, 0xff0000, 0xff00, 0xff), pixels, 0, resX);
         Image image = Toolkit.getDefaultToolkit().createImage(mis);
@@ -78,8 +86,8 @@ public class Viewport extends JFrame {
                 roughness = (double) roughnessSlider.getValue() / 100.0;
                 // Update the roughness value in the material
                 //updateRoughness(roughnessValue);
-                defaultScene = new Scene(roughness, lightIntensity, ioR);
-                defaultScene.setActiveCamera(camera);
+                currentScene = new Scene(roughness, lightIntensity, ioR);
+                currentScene.setActiveCamera(camera);
             }
         });
 
@@ -88,8 +96,8 @@ public class Viewport extends JFrame {
                 lightIntensity = (double) lightIntensitySlider.getValue() / 100.0;
                 // Update the roughness value in the material
                 //updateRoughness(roughnessValue);
-                defaultScene = new Scene(roughness, lightIntensity, ioR);
-                defaultScene.setActiveCamera(camera);
+                currentScene = new Scene(roughness, lightIntensity, ioR);
+                currentScene.setActiveCamera(camera);
             }
         });
 
@@ -98,8 +106,8 @@ public class Viewport extends JFrame {
                 ioR = (double) ioRSlider.getValue() / 100.0;
                 // Update the roughness value in the material
                 //updateRoughness(roughnessValue);
-                defaultScene = new Scene(roughness, lightIntensity, ioR);
-                defaultScene.setActiveCamera(camera);
+                currentScene = new Scene(roughness, lightIntensity, ioR);
+                currentScene.setActiveCamera(camera);
             }
         });
 
@@ -135,6 +143,30 @@ public class Viewport extends JFrame {
         translateXSlider.setMajorTickSpacing(10);
 
         JButton sinTX = new JButton("SinTX");
+        sinTX.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (timer == null) {
+
+                    timer = new Timer(16, new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            double amplitude = 1.0;
+                            double frequency = 1.0;
+
+                            double time = System.currentTimeMillis() / 1000.0; //seconds
+                            double sinValue = amplitude * Math.sin(2 * Math.PI * frequency * time);
+
+                            currentScene.updateObject(selectedObject.getId(),sinValue, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, true);
+
+                            updateImage();
+                        }
+                    });
+                    timer.start();
+                } else {
+                    timer.stop();
+                    timer = null;
+                }
+            }
+        });
 
         JLabel translateYLabel = new JLabel("Translate Y");
         JSlider translateYSlider = new JSlider(JSlider.HORIZONTAL, -10, 10, 0);
@@ -222,7 +254,7 @@ public class Viewport extends JFrame {
     }
 
     public void updateImage() {
-        int[] pixels = Renderer.renderImage(defaultScene, resY, resX, NUM_OF_THREADS);
+        int[] pixels = Renderer.renderImage(currentScene, resY, resX, NUM_OF_THREADS);
         MemoryImageSource mis = new MemoryImageSource(resX, resY, new DirectColorModel(24, 0xff0000, 0xff00, 0xff), pixels, 0, resX);
         Image image = Toolkit.getDefaultToolkit().createImage(mis);
         imageLabel.setIcon(new ImageIcon(image));
@@ -248,5 +280,8 @@ public class Viewport extends JFrame {
 
         frame.setVisible(true);
     }
+
+
+
 
 }

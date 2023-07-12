@@ -156,7 +156,8 @@ public class Renderer {
                 if (refractionIntersection != null) {
                     col = col.add(calcColorAtHit(scene, refractionRay, bounces - 1)).scale(0.2);
                 }else{
-                    col = albedoG.scale((1 - transparency)).add(colorReflection.scale(transparency)).scale(0.01);
+                    //col = albedoG.scale((1 - transparency)).add(colorReflection.scale(transparency)).scale(0.01);
+                    col = scene.getSkyBox().getColor(refractionRay).scale((1 - transparency)).add(colorReflection.scale(transparency)).scale(0.1);
                 }
             } else {
                 col = albedoG.scale((1 - reflectivity)).add(colorReflection.scale(reflectivity));

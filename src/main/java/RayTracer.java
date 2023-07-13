@@ -51,5 +51,5 @@ public class RayTracer {
 }
 
 //! IMPLEMENTED:
-/*indirect lighting, aniamtion, Multithreading, Skybox,
+/*indirect lighting, aniamtion, Multithreading, Skybox,Supersampling
  */

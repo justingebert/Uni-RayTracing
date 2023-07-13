@@ -22,16 +22,21 @@ public class Viewport extends JFrame {
     static int resX;
     static int resY;
 
+    static Renderer renderer = new Renderer();
     private Timer timer;
     private JFrame frame;
     private JLabel imageLabel;
     private Scene currentScene;
     private Object3D selectedObject;
-    private ArrayList<Scene> scenes = new ArrayList<>();
+    private ArrayList<Scene> sceneList = new ArrayList<>();
+    private JCheckBox reflectionCheckBox;
+    private JCheckBox refractionCheckBox;
+    private JCheckBox indirectLightingCheckBox;
+    private JCheckBox superSamplingCheckBox;
     private double roughness = 0.5;
     private double lightIntensity = 1.0;
     private double ioR = 1.5;
-    private int NUM_OF_THREADS = 30;
+    private int NUM_OF_THREADS = 12;
 
     static Camera camera = new Camera(
             new Vector3D(0, 0, 1),
@@ -51,7 +56,7 @@ public class Viewport extends JFrame {
         this.resX = resX;
         this.resY = resY;
 
-        int[] pixels = Renderer.renderImage(currentScene, resY, resX, NUM_OF_THREADS);
+        int[] pixels = renderer.renderImage(currentScene, resY, resX, NUM_OF_THREADS);
 
         MemoryImageSource mis = new MemoryImageSource(resX, resY, new DirectColorModel(24, 0xff0000, 0xff00, 0xff), pixels, 0, resX);
         Image image = Toolkit.getDefaultToolkit().createImage(mis);
@@ -120,6 +125,43 @@ public class Viewport extends JFrame {
         sidePanelRight.add(ioRLabel);
         sidePanelRight.add(ioRSlider);
 
+        //?? Render Options??// TODO make floating panel
+        this.reflectionCheckBox = new JCheckBox("Reflections", true);
+        this.refractionCheckBox = new JCheckBox("Refractions", true);
+        this.indirectLightingCheckBox = new JCheckBox("Indirect Light", true);
+        this.superSamplingCheckBox = new JCheckBox("Super Sampling", true);
+        reflectionCheckBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                renderer.setReflections(reflectionCheckBox.isSelected());
+            }
+        });
+
+        refractionCheckBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                renderer.setRefractions(refractionCheckBox.isSelected());
+            }
+        });
+
+        indirectLightingCheckBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                renderer.setIndirectLighting(indirectLightingCheckBox.isSelected());
+            }
+        });
+
+        superSamplingCheckBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                renderer.setSuperSampling(superSamplingCheckBox.isSelected());
+            }
+        });
+
+        sidePanelRight.add(reflectionCheckBox);
+        sidePanelRight.add(refractionCheckBox);
+        sidePanelRight.add(indirectLightingCheckBox);
+        sidePanelRight.add(superSamplingCheckBox);
         //*OPTIONS LEFT*//
 
 /*        sceneListModel = new DefaultListModel<>();
@@ -132,11 +174,26 @@ public class Viewport extends JFrame {
         removeObjectButton = new JButton("Remove Object");
         removeObjectButton.addActionListener(new RemoveObjectListener());*/
 
-        JComboBox<String> sceneBox = new JComboBox<>();
+        String[] scenes = new String[sceneList.size()];
+        for(int i = 0; i < sceneList.size(); i++){
+            int id = sceneList.get(i).getId();
+            scenes[i] = Integer.toString(id);
+        }
+        JComboBox<String> sceneBox = new JComboBox<>(scenes);
+        sceneBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int id = Integer.parseInt((String) sceneBox.getSelectedItem());
+                currentScene = sceneList.get(id);
+                currentScene.setActiveCamera(camera);
+            }
+        });
 
         JComboBox<String> ObjectBox = new JComboBox<>();
 
         JComboBox<String> SkyboxBox = new JComboBox<>();
+
+        //sidePanelLeft.add(sceneBox);
 
         JLabel translateXLabel = new JLabel("Translate X");
         JSlider translateXSlider = new JSlider(JSlider.HORIZONTAL, -10, 10, 0);
@@ -254,7 +311,7 @@ public class Viewport extends JFrame {
     }
 
     public void updateImage() {
-        int[] pixels = Renderer.renderImage(currentScene, resY, resX, NUM_OF_THREADS);
+        int[] pixels = renderer.renderImage(currentScene, resY, resX, NUM_OF_THREADS);
         MemoryImageSource mis = new MemoryImageSource(resX, resY, new DirectColorModel(24, 0xff0000, 0xff00, 0xff), pixels, 0, resX);
         Image image = Toolkit.getDefaultToolkit().createImage(mis);
         imageLabel.setIcon(new ImageIcon(image));

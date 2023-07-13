@@ -63,9 +63,19 @@ public class Camera {
     }
 
     //Ray vom Auge zum Bildpunkt
-    public Ray eyeToImage(int x, int y, int imageWidth, int imageHeight) {
+    public Ray eyeToImage(double x, double y, int imageWidth, int imageHeight) {
         Vector3D ray = leftBottomCorner.add(Right.scale(x*(aspectX/imageWidth)).add(Up.scale(y*(aspectY/imageHeight))));
         return new Ray(Position, ray);
+    }
+
+    public Ray getRay(double u, double v) {
+        // Calculate the direction of the ray for this pixel.
+        Vector3D rayDirection = leftBottomCorner
+                .add(Right.scale(u * aspectX))
+                .add(Up.scale(v * aspectY));
+
+        // Create a new ray and return it.
+        return new Ray(Position, rayDirection);
     }
 
     public Vector3D getPosition() {

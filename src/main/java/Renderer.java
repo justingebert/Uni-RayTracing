@@ -18,6 +18,8 @@ public class Renderer {
     private static boolean INDIRECT_LIGHTING = true;
     private static boolean REFLECTIONS = true;
     private static boolean REFRACTIONS = true;
+    private static boolean SUPER_SAMPLING = false;
+    private static int SAMPLES_PER_PIXEL = 4;
     private static boolean SHADOWS = true;
     private static int SHADOW_RAYS = 5;
     private static int DIFFUSE_RAYS = 1;
@@ -90,9 +92,22 @@ public class Renderer {
         public void run() {
             for (int y = startY; y < endY; ++y) {
                 for (int x = 0; x < resX; ++x) {
-
-                    Ray ray = scene.getActiveCamera().eyeToImage(x, y, resX, resY);
-                    Vector3D color = calcColorAtHit(scene, ray, MAX_REFLECTION_BOUNCES);
+                    Vector3D color;
+                    if(SUPER_SAMPLING){
+                        color = new Vector3D(0);
+                        for(int sy = 0; sy < SAMPLES_PER_PIXEL; sy++) {
+                            for(int sx = 0; sx < SAMPLES_PER_PIXEL; sx++) {
+                                double u = (x + (double)sx/SAMPLES_PER_PIXEL)/resX;
+                                double v = (y + (double)sy/SAMPLES_PER_PIXEL)/resY;
+                                Ray ray = scene.getActiveCamera().getRay(u, v);
+                                color = color.add(calcColorAtHit(scene, ray, MAX_REFLECTION_BOUNCES));
+                            }
+                        }
+                        color = color.scale(1.0/(SAMPLES_PER_PIXEL*SAMPLES_PER_PIXEL));
+                    }else{
+                        Ray ray = scene.getActiveCamera().eyeToImage((double) x, (double)y, resX, resY);
+                        color = calcColorAtHit(scene, ray, MAX_REFLECTION_BOUNCES);
+                    }
                     //gamma correction
                     double r = Math.pow(clamp(color.getX(), 0, 1), 0.45) * 255;
                     double g = Math.pow(clamp(color.getY(), 0, 1), 0.45) * 255;
@@ -249,5 +264,20 @@ public class Renderer {
         return null;
     }
 
+    public static void setReflections(boolean reflections) {
+        REFLECTIONS = reflections;
+    }
+
+    public static void setRefractions(boolean refractions) {
+        REFRACTIONS = refractions;
+    }
+
+    public static void setIndirectLighting(boolean indirectLighting) {
+        INDIRECT_LIGHTING = indirectLighting;
+    }
+
+    public static void setSuperSampling(boolean superSampling) {
+        SUPER_SAMPLING = superSampling;
+    }
 
 }

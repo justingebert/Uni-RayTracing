@@ -11,7 +11,9 @@ import java.util.ArrayList;
 
 public class Scene {
     //continue Later
+    private int id;
     private static Scene scene;
+    private static ArrayList<Scene> scenes = new ArrayList<Scene>();
     ArrayList<Object3D> objects = new ArrayList<Object3D>();
     ArrayList<PointLight> lights = new ArrayList<PointLight>();
     Camera activeCamera;
@@ -65,14 +67,19 @@ public class Scene {
 
         lights.add(new PointLight(new Vector3D(-20, 50, 3), Color.WHITE, .2*lightIntensity,1));
 
-        skyBox = new SkyBox("C:\\Users\\justi\\Documents\\PROJECTS\\Uni\\RayTracing\\src\\tex\\skybox5.jpg");
+        skyBox = new SkyBox("C:\\Users\\Justin\\Documents\\PROJECTS\\Uni\\Raytracing\\Raytracer\\src\\tex\\skybox5.jpg");
+
+        this.id = scenes.size();
+        scenes.add(this);
     }
 
-    public static Scene getScene(){
-        if(scene == null){
-            scene = new Scene(0.5,1,1.5);
-        }
-        return scene;
+
+    public int getId() {
+        return id;
+    }
+
+    public static Scene getSceneById(int id){
+        return scenes.get(id);
     }
     public void addObject(Object3D object) {
         this.objects.add(object);
@@ -111,5 +118,4 @@ public class Scene {
     public void updateMaterial(){
 
     }
-
 }

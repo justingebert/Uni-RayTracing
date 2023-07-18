@@ -22,7 +22,7 @@ public class Renderer {
     private static int SAMPLES_PER_PIXEL = 4;
     private static boolean SHADOWS = true;
     private static int SHADOW_RAYS = 5;
-    private static int DIFFUSE_RAYS = 1;
+    private static int DIFFUSE_RAYS = 10;
 
     /*public static int[] renderImage(Scene scene, int resY, int resX) {
         int[] pixels = new int[resX * resY];
@@ -239,6 +239,7 @@ public class Renderer {
                 Ray shadowRay = new Ray(shadowRayOrigin, shadowRayDirection);
                 Intersect shadowIntersection = scene.RayData(shadowRay);
                 if (shadowIntersection == null) {
+                    //ungenau, mit int zaehlen
                     shadowFactor += 1.0 / shadowRays;
                 }
             }

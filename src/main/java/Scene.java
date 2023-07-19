@@ -32,19 +32,22 @@ public class Scene {
     public Scene(double roughness, double lightIntensity, double ioR){
 
         //System.out.println(roughness);
-        Material greenMat = new Material(Color.GREEN    ,0,roughness,0,1);
-        Material blueMat = new Material(Color.WHITE,0,roughness,0.95,ioR);
-        Material redMat = new Material(Color.RED,0,0.1,0,1);
+        Material greenMat = new Material(Color.decode("#c297e5"),0,roughness,0,1);
+        Material transparentMat = new Material(Color.WHITE,0,0.33,0.95,ioR);
+        Material floorMat = new Material(Color.decode("#acc4e9"),0,0.9,0,1);
         Material blackMat = new Material(Color.BLACK,0,0.1,0,1);
-        Material cyanMat = new Material(Color.CYAN,0,0.2,0,1);
+        Material cyanMat = new Material(Color.CYAN,0,0.1,0,1);
+        Material purpleMat = new Material(Color.decode("#6e62ce"),0,0.9,0,1);
 
-       Sphere sphere1 = new Sphere(new Vector3D(-1, 0, -10), greenMat, 1.5);
-       Sphere sphere2 = new Sphere(new Vector3D(2, -0, -12), redMat, 1);
-       Sphere sphere3 = new Sphere(new Vector3D(2, -1, -8), blueMat, 1);
-       Sphere sphere4 = new Sphere(new Vector3D(-1, 0, -3), blueMat, .5);
-       //Sphere sphere5 = new Sphere(new Vector3D(0, 10, -5), redMat, 5);
+       Sphere sphere1 = new Sphere(new Vector3D(0, 3, -25), greenMat, 6); //center sphere
+       Sphere sphere2 = new Sphere(new Vector3D(1.5, -0, -14), cyanMat, 1);
+       //Sphere sphere3 = new Sphere(new Vector3D(2, -1, -8), transparentMat, 1);
+       Sphere sphere4 = new Sphere(new Vector3D(3, 0, -10), transparentMat, 2); //transparent
+       Sphere sphere5 = new Sphere(new Vector3D(0, 3010, -5), floorMat, 3000 );  //floor
+       Sphere sphere6 = new Sphere(new Vector3D(2, 7, -12), cyanMat, 2); //spehre infront
+       Sphere sphere7 = new Sphere(new Vector3D(-3, 8, -16), purpleMat, 1.7); //spehre infront left
 
-       Quadric q1 = new Quadric( 1, 1, 1, 0, 0, 0, 0, 0, 0,-1, new Vector3D(0, 0, -10), redMat);
+       Quadric q1 = new Quadric( 1, 1, 1, 0, 0, 0, 0, 0, 0,-1, new Vector3D(0, 0, -10), floorMat);
        Matrix4x4 quadricTransformation = new Matrix4x4();
 
        //TODO multiply matrix
@@ -56,9 +59,11 @@ public class Scene {
 
         objects.add(sphere1);
         objects.add(sphere2);
-        objects.add(sphere3);
+        //objects.add(sphere3);
         objects.add(sphere4);
         //objects.add(sphere5);
+        objects.add(sphere6);
+        objects.add(sphere7);
 
         //objects.add(q1);
         lights.add(new PointLight(new Vector3D(-10, -9, 10), Color.WHITE, .4*lightIntensity,1));
@@ -67,7 +72,7 @@ public class Scene {
 
         lights.add(new PointLight(new Vector3D(-20, 50, 3), Color.WHITE, .2*lightIntensity,1));
 
-        skyBox = new SkyBox("C:\\Users\\Justin\\Documents\\PROJECTS\\Uni\\Raytracing\\Raytracer\\src\\tex\\skybox5.jpg");
+        skyBox = new SkyBox("C:\\Users\\justi\\Documents\\PROJECTS\\Uni\\RayTracing\\src\\tex\\skynighte.png");
 
         this.id = scenes.size();
         scenes.add(this);

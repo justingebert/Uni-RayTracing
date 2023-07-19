@@ -13,16 +13,16 @@ import static math.Util.clamp;
 
 public class Renderer {
     private static final float GLOBAL_ILLUMINATION = 0.0003F;
-    private static final int MAX_REFLECTION_BOUNCES = 4;
+    private static final int MAX_REFLECTION_BOUNCES = 3;
     private static final boolean SHOW_SKYBOX = true;
-    private static boolean INDIRECT_LIGHTING = true;
+    private static boolean INDIRECT_LIGHTING = false;
     private static boolean REFLECTIONS = true;
     private static boolean REFRACTIONS = true;
     private static boolean SUPER_SAMPLING = false;
     private static int SAMPLES_PER_PIXEL = 4;
     private static boolean SHADOWS = true;
-    private static int SHADOW_RAYS = 5;
-    private static int DIFFUSE_RAYS = 10;
+    private static int SHADOW_RAYS = 3;
+    private static int DIFFUSE_RAYS = 4;
 
     /*public static int[] renderImage(Scene scene, int resY, int resX) {
         int[] pixels = new int[resX * resY];

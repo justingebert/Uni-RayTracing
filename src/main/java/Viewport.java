@@ -36,10 +36,10 @@ public class Viewport extends JFrame {
     private double roughness = 0.5;
     private double lightIntensity = 1.0;
     private double ioR = 1.5;
-    private int NUM_OF_THREADS = 12;
+    private int NUM_OF_THREADS = 30;
 
     static Camera camera = new Camera(
-            new Vector3D(0, 0, 1),
+            new Vector3D(0, 0, 10),
             new Vector3D(0, 0, -1),
             new Vector3D(0, 1, 0),
             new Vector3D(1, 0, 0),
@@ -48,7 +48,7 @@ public class Viewport extends JFrame {
     );
 
     public Viewport(int resX, int resY) {
-        currentScene = new Scene(0.5,1.0,1.5);
+        currentScene = new Scene(0.5,1.0,1.11);
         currentScene.setActiveCamera(camera);
 
         selectedObject = currentScene.getObjects().get(0);

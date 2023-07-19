@@ -18,9 +18,7 @@ public class Cylinder extends Object3D{
 
     @Override
     public void applyTransformation(Matrix4x4 transformationMatrix) {
-
     }
-
     @Override
     public Vector3D getNormalAt(Vector3D point) {
         return null;

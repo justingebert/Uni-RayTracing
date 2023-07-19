@@ -21,7 +21,6 @@ public class RayTracer {
         long startTime = System.nanoTime();
 
         Viewport viewport = new Viewport(resX, resY);
-
         viewport.show();
 
         while (true) {
@@ -38,10 +37,7 @@ public class RayTracer {
             if (elapsedSeconds >= 1.0) {
                 // Calculate frames per second
                 double fps = frameCount / elapsedSeconds;
-
-                // Print FPS to console
                 System.out.println("FPS: " + fps);
-
                 // Reset frame count and start time
                 frameCount = 0;
                 startTime = currentTime;
